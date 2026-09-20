@@ -1,0 +1,181 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   DESIGN SYSTEM
+   Единственный источник правды по цвету, типографике, ритму и движению.
+   Все значения доступны как Tailwind-утилиты: bg-blue, text-h2, py-section…
+   ========================================================================== */
+
+@theme {
+  /* --- Палитра ---------------------------------------------------------- */
+  --color-white: #ffffff;
+  --color-black: #0a0a0a;
+  --color-ink: #1a1a1a;
+  --color-mist: #fafafa;
+  --color-cloud: #f5f5f5;
+  --color-line: #e7e7e7;
+  --color-line-strong: #d6d6d6;
+  --color-blue: #2457d6;
+  --color-blue-hover: #3a6be8;
+  --color-blue-deep: #1b43ab;
+  --color-blue-light: #7092e4;
+  --color-navy: #0a1a3c;
+
+  /* Текст */
+  --color-muted: #565656;
+  --color-subtle: #8a8a8a;
+
+  /* --- Типографика ------------------------------------------------------ */
+  --font-sans: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+
+  --text-display: clamp(38px, 6.4vw, 96px);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.038em;
+
+  --text-h1: clamp(34px, 5.4vw, 78px);
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.035em;
+
+  --text-h2: clamp(29px, 4.1vw, 58px);
+  --text-h2--line-height: 1.04;
+  --text-h2--letter-spacing: -0.032em;
+
+  --text-h3: clamp(21px, 2.1vw, 31px);
+  --text-h3--line-height: 1.12;
+  --text-h3--letter-spacing: -0.025em;
+
+  --text-lead: clamp(18px, 1.7vw, 26px);
+  --text-lead--line-height: 1.45;
+  --text-lead--letter-spacing: -0.015em;
+
+  --text-body: clamp(15px, 1.05vw, 17px);
+  --text-body--line-height: 1.65;
+
+  --text-eyebrow: 11px;
+  --text-eyebrow--letter-spacing: 0.2em;
+
+  --text-label: 12px;
+  --text-label--letter-spacing: 0.16em;
+
+  /* --- Сетка и ритм ----------------------------------------------------- */
+  --container-site: 1440px;
+  --spacing-gutter: clamp(20px, 4.5vw, 64px);
+  /* Ритм секций: mobile 72 → tablet ~110 → desktop 150 */
+  --spacing-section: clamp(56px, 6.2vw, 104px);
+  --spacing-section-sm: clamp(44px, 4.6vw, 72px);
+  --spacing-nav: 92px;
+
+  /* --- Точки перелома (по реальной сетке макета) ------------------------- */
+  --breakpoint-sm: 560px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 900px;
+  --breakpoint-xl: 1180px;
+  --breakpoint-2xl: 1440px;
+
+  /* --- Движение --------------------------------------------------------- */
+  --ease-brand: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out-brand: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-edge: 2px;
+}
+
+/* ==========================================================================
+   БАЗОВЫЙ СЛОЙ
+   ========================================================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-white);
+    color: var(--color-black);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Блокировка прокрутки под открытым мобильным меню */
+  body[data-locked='true'] {
+    overflow: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 700;
+  }
+
+  ::selection {
+    background: var(--color-blue);
+    color: var(--color-white);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+  }
+}
+
+/* ==========================================================================
+   КОМПОНЕНТНЫЙ СЛОЙ
+   Только то, что невозможно или неудобно выразить утилитами:
+   стартовые состояния GSAP-анимаций и стили сторонних библиотек.
+   ========================================================================== */
+
+@layer components {
+  /* Стартовое состояние reveal-блоков: элемент скрыт до инициализации GSAP,
+     но остаётся видимым, если JavaScript отключён (см. <noscript> ниже). */
+  [data-reveal] {
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  [data-reveal-ready] [data-reveal] {
+    will-change: auto;
+  }
+
+  /* Swiper: стрелки и разметка приведены к дизайну сайта. */
+  .gallery .swiper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .gallery .swiper-slide {
+    height: auto;
+  }
+
+  .gallery .swiper-button-lock {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   ДОСТУПНОСТЬ И ПРОИЗВОДИТЕЛЬНОСТЬ
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
