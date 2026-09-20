@@ -28,12 +28,36 @@ const contacts: Contact = {
     'Академический лицей имени И.М. Губкина, Бектемирский район, Водник 84, Ташкент'
 };
 
+/** PLACEHOLDER — заменить на подтверждённый домен лицея. */
+const FALLBACK_ORIGIN = 'https://example.uz';
+
+/**
+ * Канонический домен. Задаётся переменной окружения NEXT_PUBLIC_SITE_URL
+ * (см. .env.example).
+ *
+ * Оператор `??` здесь не подходит: на хостинге переменная может быть
+ * объявлена, но пустой, и тогда `new URL('')` роняет сборку с ERR_INVALID_URL.
+ * Поэтому пустая строка считается «не задано».
+ */
+function resolveOrigin(): string {
+  const stripTrailingSlash = (value: string) => value.replace(/\/+$/, '');
+
+  const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (fromEnv) return stripTrailingSlash(fromEnv);
+
+  // Preview-деплои на Vercel: домен известен только во время сборки.
+  const fromVercel = (
+    process.env.NEXT_PUBLIC_VERCEL_URL ?? process.env.VERCEL_URL
+  )?.trim();
+  if (fromVercel) {
+    return stripTrailingSlash(`https://${fromVercel.replace(/^https?:\/\//, '')}`);
+  }
+
+  return FALLBACK_ORIGIN;
+}
+
 export const site = {
-  /**
-   * Канонический домен. Задаётся переменной окружения NEXT_PUBLIC_SITE_URL
-   * (см. .env.example). Значение по умолчанию — PLACEHOLDER.
-   */
-  origin: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://example.uz',
+  origin: resolveOrigin(),
 
   name: 'Академический лицей имени И.М. Губкина',
   fullName:
