@@ -104,13 +104,6 @@ export function Navbar({ logo }: { logo: string | null }) {
         </nav>
 
         <div className="flex items-center gap-3.5">
-          <Link
-            href="/admission"
-            className="hidden h-[42px] items-center rounded-edge bg-blue px-[18px] text-[13.5px] font-bold text-white transition-colors duration-200 ease-brand hover:bg-blue-hover sm:inline-flex"
-          >
-            Поступление
-          </Link>
-
           <button
             ref={toggleRef}
             type="button"
@@ -157,13 +150,6 @@ export function Navbar({ logo }: { logo: string | null }) {
         </nav>
 
         <div className="grid gap-3.5">
-          <Link
-            href="/admission"
-            onClick={() => setOpen(false)}
-            className="flex h-[52px] w-full items-center justify-center rounded-edge bg-blue text-[15px] font-bold text-white"
-          >
-            Поступление
-          </Link>
           <a href={site.contacts.phoneHref} className="text-xl font-bold tracking-[-0.01em]">
             {site.contacts.phone}
           </a>

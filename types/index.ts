@@ -55,6 +55,15 @@ export type Teacher = {
   photo: SiteImage;
 };
 
+/** Сотрудник администрации лицея (страница «Администрация»). */
+export type StaffMember = {
+  id: string;
+  name: string;
+  role: string;
+  bio: string | null;
+  photo: SiteImage;
+};
+
 export type NewsArticle = {
   id: string;
   slug: string;
