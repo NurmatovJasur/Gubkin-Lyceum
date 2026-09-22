@@ -43,6 +43,12 @@ export const teachersIntro = {
   text: 'Педагоги лицея работают с учениками ежедневно: объясняют, поддерживают, готовят к олимпиадам и поступлению.'
 } as const;
 
+export const administrationIntro = {
+  eyebrow: { number: '06', label: 'Администрация' },
+  heading: ['Люди, которые', 'управляют лицеем.'],
+  text: 'Администрация отвечает за организацию учебного процесса, приём учащихся и повседневную работу лицея.'
+} as const;
+
 export const newsIntro = {
   eyebrow: { number: '05', label: 'Жизнь лицея' },
   heading: 'Лицей — это не только занятия.',

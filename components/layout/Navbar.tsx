@@ -10,31 +10,21 @@ import { Brand } from '@/components/layout/Brand';
 import { cn } from '@/lib/utils';
 
 /**
- * Шапка сайта.
+ * Шапка сайта: плавающая полупрозрачная капсула поверх контента —
+ * один и тот же стеклянный стиль на любой странице и при любой
+ * прокрутке (без переключения на сплошной белый фон).
  *
- * Прозрачная поверх тёмного hero и белая после прокрутки. Мобильное меню
- * полностью доступно с клавиатуры: Esc закрывает, фокус возвращается на
- * кнопку, фон страницы блокируется от прокрутки.
+ * На мобильных и планшетах (< xl) капсула сжимается до логотипа и
+ * кнопки-гамбургера; список ссылок раскрывается отдельной панелью
+ * того же стиля прямо под капсулой.
  *
- * Client Component: нужен доступ к скроллу, текущему маршруту и клавиатуре.
+ * Client Component: нужен доступ к текущему маршруту и клавиатуре.
  */
 export function Navbar({ logo }: { logo: string | null }) {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-
-  /** Страницы с тёмным полноэкранным hero — шапка над ними прозрачная. */
-  const overlay = pathname === '/' || /^\/directions\/[^/]+$/.test(pathname);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-
-  // Фон шапки после небольшой прокрутки.
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   // Esc, блокировка прокрутки и возврат фокуса.
   useEffect(() => {
@@ -61,55 +51,44 @@ export function Navbar({ logo }: { logo: string | null }) {
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
 
-  const solid = !overlay || scrolled || open;
-
   return (
-    <header
-      className={cn(
-        'fixed inset-x-0 top-0 z-100 border-b transition-[background-color,border-color,color] duration-500 ease-brand',
-        solid ? 'border-line bg-white text-black' : 'border-transparent bg-transparent text-white'
-      )}
-    >
+    <header className="fixed inset-x-0 top-0 z-100">
+      {/* Затемнение страницы под открытой мобильной панелью. */}
       <div
-        className={cn(
-          'mx-auto flex w-full max-w-site items-center gap-5 px-gutter transition-[height] duration-500 ease-brand xl:gap-8',
-          solid ? 'h-[76px]' : 'h-nav'
-        )}
-      >
-        <Brand logo={logo} className="mr-auto" compact={solid} />
+        hidden={!open}
+        aria-hidden="true"
+        onClick={() => setOpen(false)}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm xl:hidden"
+      />
 
-        <nav aria-label="Основная навигация" className="hidden items-center gap-5 xl:flex">
-          {mainNav.map((item) => (
-            <Link
-              key={item.id}
-              href={item.href}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-              className={cn(
-                'group relative py-1.5 text-[14.5px] transition-opacity duration-200 ease-brand',
-                isActive(item.href)
-                  ? cn('font-bold opacity-100', solid && 'text-blue')
-                  : 'opacity-80 hover:opacity-100'
-              )}
-            >
-              {item.label}
-              <span
-                aria-hidden="true"
+      <div className="relative mx-auto w-full max-w-site px-gutter pt-4 sm:pt-5 lg:pt-6">
+        <div className="flex h-14 items-center gap-5 rounded-full border border-white/15 bg-black/55 px-5 text-white shadow-lg shadow-black/25 backdrop-blur-xl sm:h-16 sm:px-6 xl:gap-8">
+          <Brand logo={logo} compact className="mr-auto" />
+
+          <nav aria-label="Основная навигация" className="hidden items-center gap-5 xl:flex">
+            {mainNav.map((item) => (
+              <Link
+                key={item.id}
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
                 className={cn(
-                  'absolute inset-x-0 bottom-0 h-px origin-left bg-current transition-transform duration-500 ease-out-brand',
-                  isActive(item.href) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  'group relative py-1.5 text-[14.5px] transition-opacity duration-200 ease-brand',
+                  isActive(item.href)
+                    ? 'font-bold text-blue-light opacity-100'
+                    : 'opacity-80 hover:opacity-100'
                 )}
-              />
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-3.5">
-          <Link
-            href="/admission"
-            className="hidden h-[42px] items-center rounded-edge bg-blue px-[18px] text-[13.5px] font-bold text-white transition-colors duration-200 ease-brand hover:bg-blue-hover sm:inline-flex"
-          >
-            Поступление
-          </Link>
+              >
+                {item.label}
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute inset-x-0 bottom-0 h-px origin-left bg-current transition-transform duration-500 ease-out-brand',
+                    isActive(item.href) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  )}
+                />
+              </Link>
+            ))}
+          </nav>
 
           <button
             ref={toggleRef}
@@ -118,56 +97,49 @@ export function Navbar({ logo }: { logo: string | null }) {
             aria-controls="mobile-menu"
             aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
             onClick={() => setOpen((value) => !value)}
-            className="-mr-2.5 flex size-11 items-center justify-center xl:hidden"
+            className="-mr-1.5 flex size-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/5 transition-colors duration-200 ease-brand hover:bg-white/15 xl:hidden"
           >
             {open ? (
-              <X aria-hidden="true" strokeWidth={1.5} className="size-6" />
+              <X aria-hidden="true" strokeWidth={1.5} className="size-[18px]" />
             ) : (
-              <Menu aria-hidden="true" strokeWidth={1.5} className="size-6" />
+              <Menu aria-hidden="true" strokeWidth={1.5} className="size-[18px]" />
             )}
           </button>
         </div>
-      </div>
 
-      {/* Мобильная панель */}
-      <div
-        ref={panelRef}
-        id="mobile-menu"
-        hidden={!open}
-        className="fixed inset-x-0 top-[76px] bottom-0 z-110 flex flex-col justify-between gap-8 overflow-y-auto bg-white px-gutter pt-8 pb-[calc(32px+env(safe-area-inset-bottom,0px))] text-black xl:hidden"
-      >
-        <nav aria-label="Мобильная навигация" className="grid border-t border-line">
-          {mainNav.map((item, index) => (
-            <Link
-              key={item.id}
-              href={item.href}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-              onClick={() => setOpen(false)}
-              className={cn(
-                'flex items-baseline gap-4 border-b border-line py-[18px] text-[clamp(22px,6vw,30px)] font-bold tracking-[-0.02em] transition-colors duration-200',
-                isActive(item.href) && 'text-blue'
-              )}
-            >
-              <span aria-hidden="true" className="text-xs font-normal tracking-[0.1em] text-subtle">
-                0{index + 1}
-              </span>
-              <span>{item.label}</span>
-            </Link>
-          ))}
-        </nav>
+        {/* Мобильная панель: та же стеклянная капсула, разворачивается под шапкой. */}
+        <div
+          ref={panelRef}
+          id="mobile-menu"
+          hidden={!open}
+          className="mt-3 max-h-[calc(100svh-140px)] overflow-y-auto rounded-[28px] border border-white/15 bg-black/80 px-gutter pt-2 pb-[calc(28px+env(safe-area-inset-bottom,0px))] text-white shadow-lg shadow-black/25 backdrop-blur-xl xl:hidden"
+        >
+          <nav aria-label="Мобильная навигация" className="grid divide-y divide-white/15 border-b border-white/15">
+            {mainNav.map((item, index) => (
+              <Link
+                key={item.id}
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  'flex items-baseline gap-4 py-[16px] text-[clamp(20px,6vw,26px)] font-bold tracking-[-0.02em] transition-colors duration-200',
+                  isActive(item.href) && 'text-blue-light'
+                )}
+              >
+                <span aria-hidden="true" className="text-xs font-normal tracking-[0.1em] text-white/50">
+                  0{index + 1}
+                </span>
+                <span>{item.label}</span>
+              </Link>
+            ))}
+          </nav>
 
-        <div className="grid gap-3.5">
-          <Link
-            href="/admission"
-            onClick={() => setOpen(false)}
-            className="flex h-[52px] w-full items-center justify-center rounded-edge bg-blue text-[15px] font-bold text-white"
-          >
-            Поступление
-          </Link>
-          <a href={site.contacts.phoneHref} className="text-xl font-bold tracking-[-0.01em]">
-            {site.contacts.phone}
-          </a>
-          <p className="text-sm text-muted">{site.contacts.addressFull}</p>
+          <div className="mt-6 grid gap-3.5">
+            <a href={site.contacts.phoneHref} className="text-xl font-bold tracking-[-0.01em]">
+              {site.contacts.phone}
+            </a>
+            <p className="text-sm text-white/70">{site.contacts.addressFull}</p>
+          </div>
         </div>
       </div>
     </header>

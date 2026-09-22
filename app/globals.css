@@ -63,7 +63,8 @@
   /* Ритм секций: mobile 72 → tablet ~110 → desktop 150 */
   --spacing-section: clamp(56px, 6.2vw, 104px);
   --spacing-section-sm: clamp(44px, 4.6vw, 72px);
-  --spacing-nav: 92px;
+  /* Запас под плавающую капсулу шапки (см. Navbar) на страницах без фото-hero. */
+  --spacing-nav: 112px;
 
   /* --- Точки перелома (по реальной сетке макета) ------------------------- */
   --breakpoint-sm: 560px;
@@ -153,6 +154,21 @@
 
   .gallery .swiper-button-lock {
     display: none;
+  }
+}
+
+/* ==========================================================================
+   БЕСКОНЕЧНАЯ ЛЕНТА (Marquee)
+   Автопрокрутка карточек — см. TeachersMarquee. Пауза по hover/фокусу/
+   касанию задаётся из компонента через animation-play-state.
+   ========================================================================== */
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }
 

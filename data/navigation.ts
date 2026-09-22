@@ -3,9 +3,9 @@ import type { NavItem } from '@/types';
 /** Главная навигация — реальные маршруты (next/link). */
 export const mainNav: NavItem[] = [
   { id: 'about', label: 'О лицее', href: '/about' },
-  { id: 'directions', label: 'Направления', href: '/directions' },
+  { id: 'administration', label: 'Администрация', href: '/administration' },
   { id: 'teachers', label: 'Преподаватели', href: '/teachers' },
-  { id: 'admission', label: 'Поступление', href: '/admission' },
+  { id: 'directions', label: 'Направления', href: '/directions' },
   { id: 'news', label: 'Новости', href: '/news' },
   { id: 'contacts', label: 'Контакты', href: '/contacts' }
 ];

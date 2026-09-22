@@ -80,7 +80,7 @@ export function InnerHero({
   const lines = Array.isArray(title) ? title : [title as string];
 
   return (
-    <section className="border-b border-line pt-[calc(92px+clamp(40px,5vw,84px))] pb-[clamp(32px,4vw,56px)]">
+    <section className="border-b border-line pt-[calc(112px+clamp(40px,5vw,84px))] pb-[clamp(32px,4vw,56px)]">
       <div className="mx-auto w-full max-w-site px-gutter">
         <Reveal>
           {eyebrow ? (

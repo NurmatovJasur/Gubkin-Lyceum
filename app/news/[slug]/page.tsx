@@ -54,7 +54,7 @@ export default async function NewsArticlePage({ params }: PageProps) {
 
   return (
     <>
-      <Section className="pt-[calc(92px+clamp(32px,4vw,64px))] pb-0">
+      <Section className="pt-[calc(112px+clamp(32px,4vw,64px))] pb-0">
         <Container>
           <nav
             aria-label="Хлебные крошки"
