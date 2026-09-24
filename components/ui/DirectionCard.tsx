@@ -19,7 +19,7 @@ export function DirectionCard({ direction, image, priority = false }: DirectionC
     <Link
       href={`/directions/${direction.slug}`}
       aria-label={`Направление «${direction.title}» — подробнее`}
-      className="group relative block aspect-[4/5] isolate overflow-hidden bg-black text-white sm:aspect-[3/2] lg:aspect-[4/3]"
+      className="group relative block aspect-[4/5] isolate overflow-hidden rounded-media bg-black text-white sm:aspect-[3/2] lg:aspect-[4/3]"
     >
       <span className="absolute inset-0 block">
         <Media

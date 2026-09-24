@@ -46,13 +46,41 @@ export type Direction = {
   next: string[];
 };
 
+/** Звание для группировки на /teachers — от высшего к младшему, плюс специалисты лицея. */
+export type TeacherRank = 'professor' | 'chief' | 'leading' | 'senior' | 'teacher' | 'staff';
+
 export type Teacher = {
   id: string;
   name: string;
   subject: string;
+  /** Полная должность — как на карточке, выводится в TeacherModal. */
   role: string;
+  rank: TeacherRank;
   bio: string | null;
   photo: SiteImage;
+};
+
+/** Сотрудник администрации лицея. */
+export type AdminMember = {
+  id: string;
+  /** Фамилия — первой строкой в карточке. */
+  surname: string;
+  /** Имя и отчество. */
+  givenNames: string;
+  position: string;
+  /** Учёная степень, если есть. */
+  degree: string | null;
+  /** Номер кабинета или null, если не указан. */
+  cabinet: string | null;
+  photo: SiteImage;
+};
+
+/** Уровень в структуре администрации: сверху вниз по должностям. */
+export type AdminLevel = {
+  id: string;
+  number: string;
+  title: string;
+  members: AdminMember[];
 };
 
 export type NewsArticle = {

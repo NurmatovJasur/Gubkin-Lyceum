@@ -3,6 +3,8 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Доступ к dev-серверу с телефона по локальной сети (иначе JS блокируется).
+  allowedDevOrigins: ['192.168.*.*'],
   images: {
     // Локальные фотографии лицея — только современные форматы.
     formats: ['image/avif', 'image/webp'],

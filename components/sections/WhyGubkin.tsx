@@ -1,6 +1,6 @@
 import { why } from '@/data/content';
 import { Container, Section } from '@/components/ui/Container';
-import { Eyebrow, Lines } from '@/components/ui/SectionHeading';
+import { Lines } from '@/components/ui/SectionHeading';
 import { Reveal } from '@/components/animations/Reveal';
 
 /** Секция «Почему Губкина?» — крупный текстовый блок на светлом фоне. */
@@ -10,11 +10,6 @@ export function WhyGubkin() {
       <Container>
         <div className="grid items-start gap-7 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-[clamp(28px,5vw,110px)]">
           <Reveal>
-            <Eyebrow
-              number={why.eyebrow.number}
-              label={why.eyebrow.label}
-              className="mb-[clamp(24px,3vw,40px)]"
-            />
             <h2 className="text-h2">{why.heading}</h2>
           </Reveal>
 

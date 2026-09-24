@@ -34,7 +34,6 @@ export default function AboutPage() {
   return (
     <>
       <InnerHero
-        eyebrow={about.eyebrow}
         title={about.heading}
         text={why.paragraphs[0]}
       />

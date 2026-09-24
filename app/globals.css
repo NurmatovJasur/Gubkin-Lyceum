@@ -75,7 +75,9 @@
   /* --- Движение --------------------------------------------------------- */
   --ease-brand: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out-brand: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Скругления: кнопки и мелкие плашки / фотографии. */
   --radius-edge: 2px;
+  --radius-media: clamp(14px, 1.4vw, 22px);
 }
 
 /* ==========================================================================
@@ -153,6 +155,27 @@
 
   .gallery .swiper-button-lock {
     display: none;
+  }
+}
+
+/* Фотоблок «О лицее» (десктоп): полоса автопрокрутки и смена подписи. */
+@keyframes showcase-progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes showcase-caption {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 

@@ -12,6 +12,8 @@ type MediaProps = {
   className?: string;
   /** Дополнительные классы для самого <img>. */
   imageClassName?: string;
+  /** 'contain' — кадр не обрезается и не увеличивается (весь снимок виден целиком). */
+  fit?: 'cover' | 'contain';
 };
 
 /**
@@ -31,7 +33,8 @@ export function Media({
   priority = false,
   quality = 82,
   className,
-  imageClassName
+  imageClassName,
+  fit = 'cover'
 }: MediaProps) {
   if (image.isPlaceholder) {
     return <MediaPlaceholder image={image} className={className} />;
@@ -46,7 +49,12 @@ export function Media({
       quality={quality}
       priority={priority}
       loading={priority ? undefined : 'lazy'}
-      className={cn('object-cover object-center', className, imageClassName)}
+      className={cn(
+        fit === 'contain' ? 'object-contain' : 'object-cover',
+        'object-center',
+        className,
+        imageClassName
+      )}
     />
   );
 }

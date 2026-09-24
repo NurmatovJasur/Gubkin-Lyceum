@@ -22,7 +22,6 @@ export default function DirectionsPage() {
   return (
     <>
       <InnerHero
-        eyebrow={directionsIntro.eyebrow}
         title={directionsIntro.heading}
         text={directionsIntro.text}
       />

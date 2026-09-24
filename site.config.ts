@@ -14,8 +14,11 @@ const contacts: Contact = {
   phone: '+998 (71) 295-77-31',
   phoneHref: 'tel:+998712957731',
 
-  /** PLACEHOLDER — уточнить официальный Telegram лицея. */
-  telegram: null,
+  /** Официальный Telegram-канал лицея. */
+  telegram: {
+    label: '@akademiclitsey_UNG_uz',
+    href: 'https://t.me/akademiclitsey_UNG_uz'
+  },
 
   /** PLACEHOLDER — уточнить официальный e-mail лицея. */
   email: null,

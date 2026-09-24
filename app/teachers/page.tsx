@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import { site } from '@/site.config';
 import { teachersIntro } from '@/data/content';
 import { InnerHero } from '@/components/sections/PageHero';
-import { Teachers } from '@/components/sections/Teachers';
+import { teachers, teacherRanks } from '@/data/teachers';
+import { resolveImage } from '@/lib/images';
+import { Container, Section } from '@/components/ui/Container';
+import { TeachersByRank } from '@/components/sections/TeachersByRank';
 import { AdmissionCTA } from '@/components/sections/AdmissionCTA';
 
 export const metadata: Metadata = {
@@ -19,14 +22,26 @@ export const metadata: Metadata = {
 };
 
 export default function TeachersPage() {
+  const groups = teacherRanks
+    .map((rank) => ({
+      ...rank,
+      cards: teachers
+        .filter((teacher) => teacher.rank === rank.id)
+        .map((teacher) => ({ teacher, photo: resolveImage(teacher.photo) }))
+    }))
+    .filter((group) => group.cards.length > 0);
+
   return (
     <>
       <InnerHero
-        eyebrow={teachersIntro.eyebrow}
         title={teachersIntro.heading}
         text={teachersIntro.text}
       />
-      <Teachers withHeading={false} />
+      <Section id="teachers">
+        <Container>
+          <TeachersByRank groups={groups} />
+        </Container>
+      </Section>
       <AdmissionCTA />
     </>
   );

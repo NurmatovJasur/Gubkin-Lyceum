@@ -32,7 +32,6 @@ export default function AdmissionPage() {
   return (
     <>
       <InnerHero
-        eyebrow={{ number: '06', label: 'Поступление' }}
         title={['Как поступить', 'в лицей.']}
         text="Расскажем о направлениях, порядке поступления и ответим на вопросы родителей и будущих учеников."
       />

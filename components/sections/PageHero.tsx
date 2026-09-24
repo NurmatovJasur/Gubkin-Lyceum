@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import type { ResolvedImage } from '@/types';
 import { Media } from '@/components/ui/Media';
-import { Eyebrow } from '@/components/ui/SectionHeading';
 import { Parallax } from '@/components/animations/Parallax';
 import { Reveal } from '@/components/animations/Reveal';
 
@@ -9,12 +8,11 @@ type PageHeroProps = {
   image: ResolvedImage;
   title: string;
   intro?: string;
-  eyebrow?: { number: string; label: string };
   breadcrumb?: { label: string; href: string };
 };
 
 /** Компактный hero внутренних страниц: фотография, крошки, заголовок. */
-export function PageHero({ image, title, intro, eyebrow, breadcrumb }: PageHeroProps) {
+export function PageHero({ image, title, intro, breadcrumb }: PageHeroProps) {
   return (
     <section className="relative flex min-h-[clamp(460px,68vh,720px)] items-end overflow-hidden bg-black text-white">
       <Parallax strength={0.1} className="absolute inset-0">
@@ -47,15 +45,6 @@ export function PageHero({ image, title, intro, eyebrow, breadcrumb }: PageHeroP
         ) : null}
 
         <Reveal>
-          {eyebrow ? (
-            <Eyebrow
-              number={eyebrow.number}
-              label={eyebrow.label}
-              tone="light"
-              className="mb-[clamp(20px,3vw,34px)]"
-            />
-          ) : null}
-
           <h1 className="mb-4 text-h1">{title}</h1>
 
           {intro ? (
@@ -70,12 +59,10 @@ export function PageHero({ image, title, intro, eyebrow, breadcrumb }: PageHeroP
 /** Текстовый hero внутренних страниц — без фотографии. */
 export function InnerHero({
   title,
-  text,
-  eyebrow
+  text
 }: {
   title: readonly string[] | string;
   text?: string;
-  eyebrow?: { number: string; label: string };
 }) {
   const lines = Array.isArray(title) ? title : [title as string];
 
@@ -83,14 +70,6 @@ export function InnerHero({
     <section className="border-b border-line pt-[calc(92px+clamp(40px,5vw,84px))] pb-[clamp(32px,4vw,56px)]">
       <div className="mx-auto w-full max-w-site px-gutter">
         <Reveal>
-          {eyebrow ? (
-            <Eyebrow
-              number={eyebrow.number}
-              label={eyebrow.label}
-              className="mb-[clamp(24px,3vw,40px)]"
-            />
-          ) : null}
-
           <h1 className="mb-5 text-h1">
             {lines.map((line, index) => (
               <span key={line} className="block">

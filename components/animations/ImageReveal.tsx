@@ -46,7 +46,7 @@ export function ImageReveal({ children, className, delay = 0 }: ImageRevealProps
   }, [delay]);
 
   return (
-    <div ref={root} className={cn('relative min-w-0 overflow-hidden bg-cloud', className)}>
+    <div ref={root} className={cn('relative isolate min-w-0 overflow-hidden rounded-media bg-cloud', className)}>
       {children}
     </div>
   );

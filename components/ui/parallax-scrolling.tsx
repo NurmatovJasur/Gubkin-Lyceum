@@ -28,8 +28,14 @@ import { cn } from '@/lib/utils';
  * Плавность даёт `scrub: 0.6` — сглаживается только эта анимация,
  * скорость прокрутки страницы остаётся обычной.
  *
+ * Высота рамки — `--frame`, ровно экран на любых устройствах, и рамка
+ * закрепляется у верхнего края. Меньшая рамка по центру экрана оставляла
+ * над и под собой пустые полосы, которые росли и сжимались при прокрутке.
+ * Границы таймлайна совпадают с отрезком, пока sticky держит рамку, и не
+ * зависят от `window.innerHeight` (панель адреса на телефоне его меняет).
+ *
  * Без JS (и при `prefers-reduced-motion`) слои остаются в обычном потоке:
- * три кадра высотой в экран друг за другом, без наложения.
+ * три кадра высотой `--frame` друг за другом, без наложения.
  */
 
 /** Дрейф снимка внутри слоя, в процентах его собственной высоты. */
@@ -57,11 +63,14 @@ export function ParallaxComponent({ images, className }: ParallaxComponentProps)
       const layers = Array.from(element.querySelectorAll<HTMLElement>('[data-layer]'));
       if (layers.length < 2) return;
 
+      // Рамка закреплена у верхнего края: таймлайн идёт, пока она стоит.
+      const frame = element.firstElementChild as HTMLElement;
+
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: element,
           start: 'top top',
-          end: 'bottom bottom',
+          end: () => `+=${element.offsetHeight - frame.offsetHeight}`,
           scrub: 0.6,
           invalidateOnRefresh: true
         }
@@ -115,18 +124,23 @@ export function ParallaxComponent({ images, className }: ParallaxComponentProps)
   return (
     <div
       ref={root}
-      className={cn('relative', className)}
-      // Высота контейнера задаёт длину прокрутки: по экрану на каждый кадр.
-      style={stacked ? { height: `${images.length * 100}svh` } : undefined}
+      className={cn('relative [--frame:100svh]', className)}
+      // Высота контейнера задаёт длину прокрутки: по рамке на каждый кадр.
+      style={stacked ? { height: `calc(${images.length} * var(--frame))` } : undefined}
     >
-      <div className={cn(stacked && 'sticky top-0 h-svh w-full overflow-hidden')}>
+      <div
+        className={cn(
+          stacked &&
+            'sticky top-0 h-(--frame) w-full overflow-hidden'
+        )}
+      >
         {images.map((image, index) => (
           <div
             key={image.file}
             data-layer
             className={cn(
               'w-full overflow-hidden bg-black',
-              stacked ? 'absolute inset-0 will-change-transform' : 'relative h-svh'
+              stacked ? 'absolute inset-0 will-change-transform' : 'relative h-(--frame)'
             )}
             // Никаких стартовых transform в разметке: GSAP принял бы их за
             // базовое смещение и прибавил yPercent сверху. Стартовое положение
@@ -135,14 +149,14 @@ export function ParallaxComponent({ images, className }: ParallaxComponentProps)
           >
             <div data-layer-inner className="absolute inset-x-0 -top-[10%] h-[120%]">
               {/*
-                Снимок выше рамки и обрезается по ширине, поэтому его реальная
-                ширина заметно больше ширины вьюпорта — особенно на вертикальных
-                экранах. Проценты описывают её, иначе next/image отдал бы файл
-                втрое меньше нужного.
+                Снимок на 20% выше рамки и обрезается по ширине, поэтому его
+                реальная ширина больше вьюпорта: на вертикальном телефоне
+                это ~1.2 высоты экрана × 1.6 (пропорция снимка), на
+                десктопе — в зависимости от пропорций окна.
               */}
               <Media
                 image={image}
-                sizes="(max-width: 480px) 400vw, (max-width: 899px) 250vw, 105vw"
+                sizes="(max-width: 899px) 195vh, 105vw"
                 quality={85}
               />
             </div>

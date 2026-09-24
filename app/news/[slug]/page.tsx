@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { news, getArticle, formatDate } from '@/data/news';
+import { news, getArticle } from '@/data/news';
 import { site } from '@/site.config';
 import { resolveImage } from '@/lib/images';
 import { Container, Section } from '@/components/ui/Container';
@@ -70,11 +70,7 @@ export default async function NewsArticlePage({ params }: PageProps) {
           </nav>
 
           <Reveal className="max-w-[24ch]">
-            <p className="mb-4 flex items-center gap-[10px] text-label text-subtle uppercase">
-              <span>{formatDate(article.date)}</span>
-              <span aria-hidden="true" className="size-[3px] rounded-full bg-line-strong" />
-              <span className="text-blue">{article.category}</span>
-            </p>
+            <p className="mb-4 text-label text-blue uppercase">{article.category}</p>
             <h1 className={pending ? 'text-h1 text-subtle' : 'text-h1'}>{article.title}</h1>
           </Reveal>
 

@@ -16,8 +16,6 @@ export function Directions({ withHeading = true }: { withHeading?: boolean }) {
       <Container>
         {withHeading ? (
           <SectionHeading
-            number={directionsIntro.eyebrow.number}
-            label={directionsIntro.eyebrow.label}
             heading={directionsIntro.heading}
             text={directionsIntro.text}
             split

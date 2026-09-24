@@ -24,7 +24,6 @@ export default function NewsPage() {
   return (
     <>
       <InnerHero
-        eyebrow={newsIntro.eyebrow}
         title={['Новости', 'и события.']}
         text={newsIntro.text}
       />

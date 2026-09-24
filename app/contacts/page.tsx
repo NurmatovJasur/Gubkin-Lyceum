@@ -19,7 +19,6 @@ export default function ContactsPage() {
   return (
     <>
       <InnerHero
-        eyebrow={{ number: '07', label: 'Контакты' }}
         title={['Как нас найти', 'и связаться.']}
         text="Приёмная комиссия отвечает на вопросы о направлениях, поступлении и учебном процессе."
       />

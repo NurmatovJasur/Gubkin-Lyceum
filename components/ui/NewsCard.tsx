@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import type { NewsArticle, ResolvedImage } from '@/types';
-import { formatDate } from '@/data/news';
 import { Media } from '@/components/ui/Media';
 import { cn } from '@/lib/utils';
 
@@ -28,7 +27,7 @@ export function NewsCard({
       <Link href={`/news/${article.slug}`} className="block">
         <div
           className={cn(
-            'relative mb-4 overflow-hidden bg-cloud',
+            'relative isolate mb-4 overflow-hidden rounded-media bg-cloud',
             feature ? 'aspect-16/10' : 'aspect-4/3'
           )}
         >
@@ -40,11 +39,7 @@ export function NewsCard({
           />
         </div>
 
-        <p className="mb-3 flex items-center gap-[10px] text-label text-subtle uppercase">
-          <span className={cn(!article.date && 'text-subtle')}>{formatDate(article.date)}</span>
-          <span aria-hidden="true" className="size-[3px] rounded-full bg-line-strong" />
-          <span className="text-blue">{article.category}</span>
-        </p>
+        <p className="mb-3 text-label text-blue uppercase">{article.category}</p>
 
         <h3
           className={cn(

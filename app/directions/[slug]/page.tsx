@@ -96,7 +96,6 @@ export default async function DirectionPage({ params }: PageProps) {
         image={resolveImage(direction.hero)}
         title={direction.title}
         intro={direction.description}
-        eyebrow={{ number: direction.number, label: 'Направление' }}
         breadcrumb={{ label: 'Направления', href: '/directions' }}
       />
 

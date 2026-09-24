@@ -56,7 +56,7 @@ export const aboutGallery: SiteImage[] = [
   }
 ];
 
-/** Три полноширинных кадра между секциями (лёгкий parallax). */
+/** Три полноэкранных кадра с фиксированным фоном между секциями. */
 export const parallaxGallery: SiteImage[] = [
   {
     file: 'life-01.jpg',

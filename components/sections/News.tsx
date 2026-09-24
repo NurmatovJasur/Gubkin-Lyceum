@@ -18,8 +18,6 @@ export function News() {
     <Section id="news">
       <Container>
         <SectionHeading
-          number={newsIntro.eyebrow.number}
-          label={newsIntro.eyebrow.label}
           heading={newsIntro.heading}
           text={newsIntro.text}
           split
