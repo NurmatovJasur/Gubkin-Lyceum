@@ -1,15 +1,14 @@
 import { heroImage } from '@/data/gallery';
-import { resolveImage } from '@/lib/images';
+import { resolveImage, getLogo } from '@/lib/images';
 import { Hero } from '@/components/sections/Hero';
 import { About } from '@/components/sections/About';
-import { Statistics } from '@/components/sections/Statistics';
-import { WhyGubkin } from '@/components/sections/WhyGubkin';
-import { Advantages } from '@/components/sections/Advantages';
+import { DirectorWord } from '@/components/sections/DirectorWord';
 import { Manifesto } from '@/components/sections/Manifesto';
-import { Directions } from '@/components/sections/Directions';
+import { Programs } from '@/components/sections/Programs';
 import { ParallaxGallery } from '@/components/sections/ParallaxGallery';
+import { CampusLife } from '@/components/sections/CampusLife';
+import { NewsFeed } from '@/components/sections/NewsFeed';
 import { Teachers } from '@/components/sections/Teachers';
-import { News } from '@/components/sections/News';
 import { FAQ } from '@/components/sections/FAQ';
 import { AdmissionCTA } from '@/components/sections/AdmissionCTA';
 import { Contacts } from '@/components/sections/Contacts';
@@ -17,16 +16,15 @@ import { Contacts } from '@/components/sections/Contacts';
 export default function HomePage() {
   return (
     <>
-      <Hero image={resolveImage(heroImage)} />
+      <Hero image={resolveImage(heroImage)} logo={getLogo()} />
       <About />
-      <Statistics />
-      <WhyGubkin />
-      <Advantages />
+      <DirectorWord />
+      <NewsFeed />
+      <Programs />
       <Manifesto />
-      <Directions />
+      <CampusLife />
       <ParallaxGallery />
       <Teachers />
-      <News />
       <FAQ />
       <AdmissionCTA />
       <Contacts />

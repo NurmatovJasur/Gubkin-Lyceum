@@ -1,44 +1,85 @@
+import Link from 'next/link';
 import { about } from '@/data/content';
-import { aboutImage, aboutGallery } from '@/data/gallery';
-import { resolveImage, resolveImages } from '@/lib/images';
-import { Container, Section } from '@/components/ui/Container';
-import { Lines } from '@/components/ui/SectionHeading';
-import { TextLink } from '@/components/ui/Button';
-import { Reveal } from '@/components/animations/Reveal';
-import { AboutShowcase } from '@/components/sections/AboutShowcase';
+import { aboutCards } from '@/data/statistics';
+import { aboutGallery } from '@/data/gallery';
+import { resolveImages } from '@/lib/images';
+import { AboutPhotoSlider } from '@/components/ui/AboutPhotoSlider';
+import { AboutCardIcon, AboutCardBack } from '@/components/sections/AboutIcons';
+import { AboutCounters } from '@/components/sections/AboutCounters';
+import styles from './About.module.css';
 
 /**
- * Секция «О лицее» — асимметричная editorial-композиция:
- * вертикальный портрет со сдвигом вниз + галерея на восемь колонок.
+ * «О лицее» — вёрстка секции `.about-section` с newuu.uz/en/,
+ * наполненная материалами лицея.
+ *
+ * Разметка повторяет оригинал узел в узел: три колонки (текст 33.3333% /
+ * фотография 29.1667% / плитка счётчиков 37.5%), плитка — вложенный `.row`
+ * с градиентной подложкой и белыми перемычками из border + ::after.
+ *
+ * Отличие одно и оно заказано: вместо единственного статичного снимка в
+ * средней колонке стоит карусель (AboutPhotoSlider) — листается руками и
+ * сама меняет кадр каждые 5 секунд. Рамка под неё сохраняет геометрию
+ * `.about-image` без изменений.
+ *
+ * Стили — About.module.css, счётчики — AboutCounters (скрипт оригинала).
  */
 export function About() {
-  const portrait = resolveImage(aboutImage);
   const gallery = resolveImages(aboutGallery);
 
   return (
-    <Section id="about">
-      <Container>
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:gap-[clamp(28px,5vw,110px)]">
-          <Reveal>
-            <h2 className="text-h2">
-              <Lines lines={about.heading} />
+    <section id="about" className={styles.section}>
+      <div className={styles.row}>
+        <div className={styles.colInfo}>
+          <div className={styles.info}>
+            <h2 className={styles.title}>
+              О лицее <span>имени И.М. Губкина</span>
             </h2>
-          </Reveal>
-
-          <Reveal delay={120} className="grid max-w-[56ch] gap-4 lg:pt-[clamp(4px,2.4vw,46px)]">
-            {about.paragraphs.map((text) => (
-              <p key={text} className="text-[clamp(15px,1.1vw,17.5px)] leading-[1.7] text-muted">
-                {text}
-              </p>
-            ))}
-            <p className="mt-3">
-              <TextLink href="/about">Подробнее о лицее</TextLink>
-            </p>
-          </Reveal>
+            <p className={styles.text}>{about.paragraphs[0]}</p>
+            <Link href="/about" className={styles.btn}>
+              Подробнее о лицее
+              <i className={styles.btnIcon} aria-hidden="true" />
+            </Link>
+          </div>
         </div>
 
-        <AboutShowcase portrait={portrait} images={gallery} label="Фотографии лицея" />
-      </Container>
-    </Section>
+        <div className={styles.colImage}>
+          <div className={styles.image}>
+            <AboutPhotoSlider images={gallery} label="Фотографии лицея" />
+          </div>
+        </div>
+
+        <AboutCounters className={styles.colCards}>
+          <div className={styles.cards}>
+            {aboutCards.map((card) => {
+              const gradientId = `about-card-${card.id}`;
+              return (
+                <div key={card.id} className={styles.cardCell}>
+                  <div className={styles.card}>
+                    <div className={styles.cardIcon}>
+                      <AboutCardIcon icon={card.icon} gradientId={gradientId} />
+                    </div>
+                    {/* Пустой при загрузке — заполняет счётчик, как в оригинале.
+                        Неподтверждённая цифра остаётся видимым «[УТОЧНИТЬ]». */}
+                    {card.value ? (
+                      <span className={styles.cardCount} data-count={card.value}>
+                        {card.value}
+                      </span>
+                    ) : (
+                      <span className={styles.cardCount} data-pending="true">
+                        [УТОЧНИТЬ]
+                      </span>
+                    )}
+                    <h3 className={styles.cardTitle}>{card.label}</h3>
+                    <div className={styles.cardBack}>
+                      <AboutCardBack icon={card.icon} gradientId={gradientId} />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </AboutCounters>
+      </div>
+    </section>
   );
 }

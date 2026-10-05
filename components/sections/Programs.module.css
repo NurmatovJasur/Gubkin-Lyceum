@@ -1,0 +1,487 @@
+/*
+ * «Направления и программы» — точная копия секции `#program-section`
+ * (`.program-section`) с newuu.uz/en/.
+ *
+ * Все числа взяты один в один из оригинальных стилей:
+ *   bootstrap.min.css  — `.row`, `.row > *`, `.col-12`, `.col-sm-6`, `.col-lg-3`,
+ *                        reboot (`h2`/`h3`: font-weight 500, margin-top 0)
+ *   main.css           — `.container`, `.row`, `.section-title`,
+ *                        `.section-title__center`, `.program-section`,
+ *                        `.program-section::before`, `.program-card*`
+ *   fonts/icomoon      — `[class^="icon-"]` и код глифа \e906 (icon-arrow-right)
+ *
+ * Оригинал опирается на глобальные `:root`-переменные, которые пересчитываются
+ * на брейкпоинтах 1712 / 1400 / 1199 / 991 / 768 / 574. Здесь те же переменные
+ * объявлены локально на самой секции, чтобы не трогать дизайн-систему сайта.
+ *
+ * Анимации в оригинале у этой секции только CSS-ные: `data-aos` на
+ * `#program-section` нет (проверено в DOM), AOS её не трогает. Переходы —
+ * `0.15s ease-in-out` на тексте, иконке и разделителе и `0.3s ease-in-out`
+ * на масштабе фотографии.
+ *
+ * Два осознанных отличия от оригинала (по заданию):
+ *   1. Фотография-подложка видна всегда, а не только при наведении
+ *      (в оригинале `.program-card__image { opacity: 0 }` → 1 на hover).
+ *      Поэтому «состояние hover» оригинала здесь сделано состоянием покоя:
+ *      белый текст, белая иконка, разделитель rgba(255,255,255,.3).
+ *      При наведении остаётся только `scale(1.2)` у самого снимка.
+ *   2. Направлений пять, а не четыре, поэтому на ≥992px колонка — 20%
+ *      (`col-lg-3` оригинала = 25%), чтобы карточки встали в один ряд.
+ *      Внутренняя геометрия карточки не изменена.
+ */
+
+/* ==========================================================================
+   :root оригинала, локально на секции
+   ========================================================================== */
+
+.section {
+  --font-300: 'MuseoSansCyrl-300', sans-serif;
+  --font-500: 'MuseoSansCyrl-500', sans-serif;
+  --font-700: 'MuseoSansCyrl-700', sans-serif;
+
+  --white-1: rgba(255, 255, 255, 1);
+  --c-white-1: 255, 255, 255;
+
+  --space-120: 120px;
+  --space-20: 20px;
+  --space-16: 16px;
+
+  --size-text-48: 48px;
+  --size-text-28: 28px;
+
+  --width-container: 1680px;
+}
+
+@media only screen and (max-width: 1712px) {
+  .section {
+    --size-text-48: 34px;
+    --size-text-28: 26px;
+
+    --width-container: 1368px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .section {
+    --space-120: 100px;
+    --space-20: 18px;
+    --space-16: 14px;
+
+    --width-container: 1140px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .section {
+    --space-120: 80px;
+    --space-20: 16px;
+    --space-16: 12px;
+
+    --size-text-48: 34px;
+    --size-text-28: 22px;
+
+    --width-container: 100%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .section {
+    --space-120: 60px;
+
+    --size-text-48: 35px;
+    --size-text-28: 22px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .section {
+    --space-120: 48px;
+
+    --size-text-48: 33px;
+    --size-text-28: 24px;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .section {
+    --space-120: 40px;
+
+    --size-text-48: 32px;
+    --size-text-28: 20px;
+  }
+}
+
+/* ==========================================================================
+   .container + .program-section
+   ========================================================================== */
+
+.section {
+  /* .container */
+  max-width: calc(var(--width-container) + var(--space-16) * 2);
+  margin: 0 auto;
+  width: 100%;
+
+  /* .program-section */
+  padding: var(--space-120) var(--space-16);
+  position: relative;
+  z-index: 1;
+}
+
+/* .program-section::before — декоративная окружность на фоне */
+.section::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--space-120) / 2);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 83.3333%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(20, 126, 92, 0.2);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* ==========================================================================
+   .section-title / .section-title__center
+   ========================================================================== */
+
+.sectionTitle {
+  color: rgb(7, 12, 28);
+  font-family: var(--font-700);
+  font-size: var(--size-text-48);
+  line-height: 120%;
+  letter-spacing: -0.48px;
+  /* reboot: h2 { margin-top: 0 } + `--space-32`: 32 / ≤1400 24 / ≤1199 20 */
+  margin: 0 0 32px;
+  /* reboot: h2 { font-weight: 500 } */
+  font-weight: 500;
+  text-align: center;
+}
+
+@media only screen and (max-width: 1400px) {
+  .sectionTitle {
+    margin-bottom: 24px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .sectionTitle {
+    margin-bottom: 20px;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .sectionTitle {
+    font-size: 24px;
+  }
+}
+
+.sectionTitle span {
+  background: linear-gradient(90deg, rgb(20, 87, 149) 0%, rgb(17, 140, 108) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   Сетка: bootstrap `.row` / `.row > *` + переопределения main.css
+   ========================================================================== */
+
+/*
+ * Карточка — фиксированные 410×300. Карточки идут слева направо и
+ * переносятся на следующую строку по мере заполнения, прижимаясь к левому
+ * краю (при пяти карточках это 3 + 2). Сам блок сетки центрируется в
+ * контейнере, чтобы на широких экранах справа не оставалось пустой трети.
+ *
+ * Отступ между карточками — `--space-16` оригинала (16 / 14 / 12 px).
+ */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: var(--space-16);
+
+  --card-w: 410px;
+  --card-h: 300px;
+
+  /* ширина блока = ровно три карточки в ряд */
+  max-width: calc(var(--card-w) * 3 + var(--space-16) * 2);
+  margin: 0 auto;
+}
+
+.row > div {
+  flex: 0 1 var(--card-w);
+  max-width: var(--card-w);
+  min-width: 0;
+  height: var(--card-h);
+}
+
+/* Три карточки по 410px в контейнер уже не помещаются — ряд по две */
+@media (max-width: 1400px) {
+  .row {
+    max-width: calc(var(--card-w) * 2 + var(--space-16));
+  }
+
+  .row > div {
+    flex: 0 1 calc((100% - var(--space-16)) / 2);
+  }
+}
+
+/* Одна колонка: карточка занимает всю ширину, высота остаётся 300px */
+@media (max-width: 767px) {
+  .row {
+    max-width: var(--card-w);
+  }
+
+  .row > div {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+}
+
+/* ==========================================================================
+   Палитра карточек: `--local-*` по позиции в ряду.
+   Цикл оригинала из четырёх тем сохранён (`4n+1`…`4n+4`),
+   пятая карточка начинает цикл заново — как это и происходит в оригинале.
+   ========================================================================== */
+
+.row > div:nth-child(4n + 1) {
+  --local-bg: linear-gradient(180deg, #cdebef 0%, #eefafc 100%);
+  --local-border-color: linear-gradient(180deg, #8bc4cc 0%, #dff1f3 100%);
+  --local-color: 25, 118, 131;
+}
+
+.row > div:nth-child(4n + 2) {
+  --local-bg: linear-gradient(180deg, #c7d9eb 0%, #edf5fc 100%);
+  --local-border-color: linear-gradient(180deg, #6c9cc7 0%, #d7e6f3 100%);
+  --local-color: 18, 94, 164;
+}
+
+.row > div:nth-child(4n + 3) {
+  --local-bg: linear-gradient(180deg, #caebe2 0%, #edfcf8 100%);
+  --local-border-color: linear-gradient(180deg, #72c2ae 0%, #d8f2ec 100%);
+  --local-color: 25, 154, 121;
+}
+
+.row > div:nth-child(4n + 4) {
+  --local-bg: linear-gradient(180deg, #c0d1e8 0%, #eff5fe 100%);
+  --local-border-color: linear-gradient(180deg, #7e9eca 0%, #dee8f6 100%);
+  --local-color: 60, 108, 172;
+}
+
+/* ==========================================================================
+   .program-card
+   ========================================================================== */
+
+/*
+ * Карточка выше содержимого (300px), поэтому раскладка взята из «высокого»
+ * варианта самого оригинала (`.page-wrapper .program-card`): колонка во всю
+ * высоту, разделитель с `margin-top: auto` — заголовок остаётся наверху,
+ * «Подробнее» прижимается к низу.
+ */
+.card {
+  padding: var(--space-20);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+/* `.program-card::after` — заливка, `::before` — градиентная рамка в 1px */
+.card::after,
+.card::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -2;
+}
+
+.card::after {
+  background: var(--local-bg);
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  border-radius: 16px;
+}
+
+.card::before {
+  background: var(--local-border-color);
+  z-index: -3;
+  width: 100%;
+  height: 100%;
+  border-radius: 17px;
+}
+
+/* --------------------------------------------------------------------------
+   Фотография-подложка.
+   В оригинале `opacity: 0` и `1` при наведении — по заданию видна всегда.
+   -------------------------------------------------------------------------- */
+
+.cardImage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  opacity: 1;
+  /*
+   * В оригинале здесь сокращение `transition: .15s ease-in-out`, то есть
+   * `all`. Снимок теперь виден всегда, меняется только прозрачность, а
+   * `transform` на этом слое ведёт GSAP (ProgramsReveal) — поэтому переход
+   * сужен до opacity: иначе CSS и GSAP тянут одно и то же свойство.
+   */
+  transition: opacity 0.15s ease-in-out;
+  z-index: -1;
+}
+
+.cardImage::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(7, 12, 28);
+  opacity: 0.4;
+  z-index: 1;
+}
+
+/*
+ * Фотографии нет — `Media` рисует заглушку с подписью, какой кадр нужен.
+ * Здесь снимок работает подложкой под текстом, поэтому подпись скрыта:
+ * иначе она легла бы поверх заголовка карточки. Остаётся ровная тёмная
+ * плашка (и `aria-label` заглушки для скринридеров) — сразу видно,
+ * что файл ещё не положили в `public/images/`.
+ */
+.cardImage > [role='img'] > * {
+  display: none;
+}
+
+/* `.program-card__image img` — и то же самое для заглушки `Media` */
+.cardImage img,
+.cardImage > [role='img'] {
+  width: 100%;
+  height: 100%;
+  object-position: center center;
+  object-fit: cover;
+  display: block;
+  transition: 0.3s ease-in-out;
+}
+
+.card:hover .cardImage img,
+.card:hover .cardImage > [role='img'] {
+  transform: scale(1.2);
+}
+
+/* --------------------------------------------------------------------------
+   Содержимое карточки
+   -------------------------------------------------------------------------- */
+
+.cardHeader {
+  position: relative;
+}
+
+.cardTitle {
+  color: var(--white-1);
+  font-family: var(--font-700);
+  font-size: var(--size-text-28);
+  font-style: normal;
+  line-height: 150%;
+  letter-spacing: -0.28px;
+  margin: 0 0 8px;
+  /* reboot: h3 { font-weight: 500 } */
+  font-weight: 500;
+  transition: color 0.15s ease-in-out;
+}
+
+.cardIcon {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.cardIcon svg {
+  width: 32px;
+  transition: fill 0.15s ease-in-out;
+  fill: var(--white-1);
+  color: var(--white-1);
+}
+
+/* `.page-wrapper .program-card__divider { margin-top: auto }` */
+.cardDivider {
+  margin: var(--space-20) 0;
+  margin-top: auto;
+  border-bottom: 1px solid rgba(var(--c-white-1), 0.3);
+  transition: border-color 0.15s ease-in-out;
+}
+
+.cardLink {
+  display: flex;
+  align-items: center;
+  color: var(--white-1);
+  font-family: var(--font-500);
+  font-size: 18px;
+  font-style: normal;
+  line-height: 150%;
+  letter-spacing: -0.18px;
+  gap: 8px;
+  transition: color 0.15s ease-in-out;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Иконочный шрифт icomoon: `.icon-arrow-right`
+   ========================================================================== */
+
+.icon {
+  color: var(--white-1);
+  font-family: 'icomoon' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: color 0.1s ease-in-out;
+}
+
+.iconArrowRight::before {
+  content: '\e906';
+}
+
+/* ==========================================================================
+   Стартовое состояние aos.css (`fade-right`).
+   Задано в CSS, чтобы карточки не вспыхивали до инициализации GSAP.
+   Медиазапрос повторяет `disable: window.innerWidth < 767` из AOS.init.
+   ========================================================================== */
+
+@media (min-width: 767px) {
+  .row [data-aos='fade-right'] {
+    opacity: 0;
+    transform: translate3d(-100px, 0, 0);
+  }
+}
+
+/* ==========================================================================
+   prefers-reduced-motion: оставляем состояние покоя, убираем переходы
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover .cardImage img,
+  .card:hover .cardImage > [role='img'] {
+    transform: none;
+  }
+
+  .row [data-aos='fade-right'] {
+    opacity: 1;
+    transform: none;
+  }
+}

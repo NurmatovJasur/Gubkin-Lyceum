@@ -51,9 +51,11 @@ export type TeacherRank = 'professor' | 'chief' | 'leading' | 'senior' | 'teache
 
 export type Teacher = {
   id: string;
+  /** Адрес персональной страницы: /teachers/<slug>. */
+  slug: string;
   name: string;
   subject: string;
-  /** Полная должность — как на карточке, выводится в TeacherModal. */
+  /** Полная должность — как на печатной карточке лицея. */
   role: string;
   rank: TeacherRank;
   bio: string | null;
@@ -110,6 +112,8 @@ export type Contact = {
   phone: string;
   phoneHref: string;
   telegram: { label: string; href: string } | null;
+  /** null → официальная страница не подтверждена, иконка не выводится. */
+  instagram: { label: string; href: string } | null;
   email: string | null;
   mapQuery: string;
 };
@@ -132,4 +136,23 @@ export type NavItem = {
   id: string;
   label: string;
   href: string;
+  /**
+   * Вложенные разделы выпадающего списка в шапке.
+   * Пункт с таким списком раскрывается по наведению и с клавиатуры,
+   * а своя страница пункта идёт первой строкой списка.
+   */
+  children?: NavItem[];
+};
+
+/**
+ * «Оконце» в секции «Жизнь в лицее»: фотография в арке + подпись.
+ *
+ * `href: null` — отдельной страницы по теме на сайте пока нет, карточка
+ * выводится без ссылки (выдуманные маршруты не создаём).
+ */
+export type CampusWindow = {
+  id: string;
+  title: string;
+  href: string | null;
+  image: SiteImage;
 };

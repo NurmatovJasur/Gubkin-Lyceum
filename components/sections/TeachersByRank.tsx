@@ -1,10 +1,10 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { Search, X } from 'lucide-react';
 import type { ResolvedImage, Teacher, TeacherRank } from '@/types';
-import { Media } from '@/components/ui/Media';
-import { TeacherModal } from '@/components/ui/TeacherModal';
+import { TeacherCard } from '@/components/ui/TeacherCard';
 
 type Card = { teacher: Teacher; photo: ResolvedImage };
 type Group = { id: TeacherRank; label: string; cards: Card[] };
@@ -18,15 +18,14 @@ const toWords = (text: string) =>
 
 /**
  * Страница /teachers: преподаватели по званиям — от профессора до
- * преподавателя, затем специалисты лицея. Клик по портрету открывает
- * ту же карточку, что и в бегущей ленте на главной (TeacherModal).
+ * преподавателя, затем специалисты лицея. Клик по карточке ведёт на
+ * персональную страницу /teachers/<slug>.
  *
  * Поиск по ФИО: каждое слово запроса должно быть началом фамилии, имени
  * или отчества, порядок не важен («Наиля Абдул» найдёт «Абдулхаликова
  * Наиля Ранилевна», а «аб» не найдёт «Атабекову»). Пустые группы скрываются.
  */
 export function TeachersByRank({ groups }: { groups: Group[] }) {
-  const [active, setActive] = useState<Card | null>(null);
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -91,35 +90,25 @@ export function TeachersByRank({ groups }: { groups: Group[] }) {
             <p className="shrink-0 text-sm text-subtle">{group.cards.length}</p>
           </header>
 
-          <ul className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <ul className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-4">
             {group.cards.map((card) => (
-              <li key={card.teacher.id}>
-                <button
-                  type="button"
+              <li key={card.teacher.id} className="h-full">
+                <Link
+                  href={`/teachers/${card.teacher.slug}`}
                   aria-label={card.teacher.name}
-                  onClick={() => setActive(card)}
-                  className="group block w-full outline-offset-4"
+                  className="group block h-full outline-offset-4"
                 >
-                  {/* ФИО и звание напечатаны на самой карточке; пропорции и срез каймы — как в TeachersMarquee. */}
-                  <span className="relative block aspect-[488/688] overflow-hidden bg-cloud">
-                    <span className="absolute -inset-1 block transition-transform duration-500 ease-brand group-hover:scale-[1.03]">
-                      <Media image={card.photo} sizes="(max-width: 640px) 50vw, 260px" />
-                    </span>
-                  </span>
-                </button>
+                  <TeacherCard
+                    teacher={card.teacher}
+                    photo={card.photo}
+                    sizes="(max-width: 560px) 50vw, (max-width: 900px) 33vw, 300px"
+                  />
+                </Link>
               </li>
             ))}
           </ul>
         </section>
       ))}
-
-      {active ? (
-        <TeacherModal
-          teacher={active.teacher}
-          photo={active.photo}
-          onClose={() => setActive(null)}
-        />
-      ) : null}
     </div>
   );
 }

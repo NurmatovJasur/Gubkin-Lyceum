@@ -20,11 +20,31 @@ export const teacherRanks: { id: TeacherRank; label: string }[] = [
  * администрацией лицея. bio: null — там, где администрация не указала
  * дополнительную справку.
  */
+const latin: Record<string, string> = {
+  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z',
+  и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r',
+  с: 's', т: 't', у: 'u', ф: 'f', х: 'h', ц: 'c', ч: 'ch', ш: 'sh', щ: 'sch',
+  ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
+  // Узбекская кириллица — на случай, если ФИО придёт в этом написании.
+  қ: 'q', ғ: 'g', ҳ: 'h', ў: 'u'
+};
+
+/** ФИО → адрес страницы: «Пак Элвира Васильевна» → `pak-elvira-vasilevna`. */
+const slugify = (name: string): string =>
+  name
+    .toLowerCase()
+    .split('')
+    .map((letter) => (letter in latin ? latin[letter] : letter))
+    .join('')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 const teacher = (
   index: number,
-  data: Omit<Teacher, 'id' | 'photo'>
+  data: Omit<Teacher, 'id' | 'slug' | 'photo'>
 ): Teacher => ({
   id: `teacher-${String(index).padStart(2, '0')}`,
+  slug: slugify(data.name),
   ...data,
   photo: {
     file: `teacher-${String(index).padStart(2, '0')}.jpg`,
@@ -253,3 +273,11 @@ export const teachers: Teacher[] = [
     bio: 'Автор множества статей и методических пособий о проектировании процесса математики в академических лицеях. Среди учеников — дипломанты и победители международных олимпиад.'
   })
 ];
+
+/** Преподаватель по адресу страницы — для /teachers/[slug]. */
+export const getTeacher = (slug: string): Teacher | undefined =>
+  teachers.find((item) => item.slug === slug);
+
+/** Подпись звания («Главные преподаватели» → «Главный преподаватель» берём из role). */
+export const rankLabel = (rank: TeacherRank): string =>
+  teacherRanks.find((item) => item.id === rank)?.label ?? '';

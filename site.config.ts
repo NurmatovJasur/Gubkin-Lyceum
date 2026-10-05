@@ -20,6 +20,14 @@ const contacts: Contact = {
     href: 'https://t.me/akademiclitsey_UNG_uz'
   },
 
+  /**
+   * PLACEHOLDER — официальная страница в Instagram не подтверждена.
+   * Как только ссылка будет известна, впишите её сюда —
+   * иконка сама появится в шапке и подвале:
+   * instagram: { label: '@...', href: 'https://instagram.com/...' }
+   */
+  instagram: null,
+
   /** PLACEHOLDER — уточнить официальный e-mail лицея. */
   email: null,
 

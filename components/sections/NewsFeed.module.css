@@ -1,0 +1,580 @@
+/*
+ * «University News» — точная копия секции `.news-section` с newuu.uz/en/.
+ *
+ * Все числа взяты один в один из оригинальных стилей:
+ *   bootstrap.min.css  — `.row`, `.row > *`, `.col`, `.d-none`, `.d-sm-block`,
+ *                        `.d-sm-none`, `.d-block`, reboot (`h2`/`h3`: font-weight 500)
+ *   main.css           — `.container`, `.row`, `.pt-100`, `.section-header`,
+ *                        `.section-title`, `.section-link`, `.news-section`,
+ *                        `.news-card*`, `.news-right`
+ *   fonts/icomoon      — `[class^="icon-"]` и коды глифов \e904 / \e909 / \e90e
+ *
+ * Оригинал опирается на глобальные `:root`-переменные, которые пересчитываются
+ * на брейкпоинтах 1712 / 1400 / 1199 / 991 / 768 / 574. Здесь те же переменные
+ * объявлены локально на самой секции, чтобы не трогать дизайн-систему сайта.
+ *
+ * Анимация появления в оригинале — AOS 2 (`data-aos="zoom-in"` / `"fade-up"`,
+ * duration 500, задержки 0…1200, easing `ease`, offset 120, once: false,
+ * disable при innerWidth < 767). Воспроизведена на GSAP ScrollTrigger
+ * с теми же параметрами — components/animations/AosReveal.tsx.
+ */
+
+/* ==========================================================================
+   :root оригинала, локально на секции
+   ========================================================================== */
+
+.section {
+  --font-300: 'MuseoSansCyrl-300', sans-serif;
+  --font-700: 'MuseoSansCyrl-700', sans-serif;
+
+  --black-1: rgba(1, 11, 27, 1);
+
+  --space-16: 16px;
+  --space-100: 100px;
+
+  --size-text-48: 48px;
+  --size-text-28: 28px;
+  --size-text-20: 20px;
+  --size-text-18: 18px;
+
+  --width-container: 1680px;
+  --height-header-top: 48px;
+  --height-header-bot: 112px;
+  --height-header: calc(var(--height-header-bot) + var(--height-header-top));
+}
+
+@media only screen and (max-width: 1712px) {
+  .section {
+    --size-text-48: 34px;
+    --size-text-28: 26px;
+    --size-text-20: 19px;
+    --size-text-18: 16px;
+
+    --width-container: 1368px;
+    --height-header-bot: 100px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .section {
+    --space-100: 80px;
+    --space-16: 14px;
+
+    --width-container: 1140px;
+    --height-header-bot: 92px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .section {
+    --space-100: 60px;
+    --space-16: 12px;
+
+    --size-text-48: 34px;
+    --size-text-28: 22px;
+    --size-text-20: 18px;
+
+    --width-container: 100%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .section {
+    --space-100: 48px;
+
+    --size-text-48: 35px;
+    --size-text-28: 22px;
+    --size-text-20: 18px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .section {
+    --space-100: 40px;
+
+    --size-text-48: 33px;
+    --size-text-28: 24px;
+    --size-text-20: 18px;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .section {
+    --space-100: 36px;
+
+    --size-text-48: 32px;
+    --size-text-28: 20px;
+    --size-text-20: 18px;
+  }
+}
+
+/* ==========================================================================
+   .container + .pt-100 + .news-section
+   ========================================================================== */
+
+.section {
+  /* .container */
+  max-width: calc(var(--width-container) + var(--space-16) * 2);
+  margin: 0 auto;
+  padding: 0 var(--space-16);
+  width: 100%;
+
+  /* .pt-100 */
+  padding-top: var(--space-100);
+
+  /* .news-section */
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   .section-header / .section-title / .section-link
+   ========================================================================== */
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-16);
+}
+
+.sectionTitle {
+  color: #070c1c;
+  font-family: var(--font-700);
+  font-size: var(--size-text-48);
+  line-height: 120%;
+  letter-spacing: -0.48px;
+  /* reboot: h2 { margin-top: 0 } + `.section-header .section-title` */
+  margin: 0;
+  font-weight: 500;
+}
+
+@media only screen and (max-width: 574px) {
+  .sectionTitle {
+    font-size: 24px;
+  }
+}
+
+.sectionTitle span {
+  background: linear-gradient(90deg, rgb(20, 87, 149) 0%, rgb(17, 140, 108) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sectionLink {
+  color: rgb(17, 140, 108);
+  font-family: var(--font-300);
+  font-size: var(--size-text-18);
+  line-height: 150%;
+  letter-spacing: -0.18px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.sectionLink i {
+  font-size: 20px;
+  background: linear-gradient(90deg, rgb(20, 87, 149) 0%, rgb(17, 140, 108) 100%) center center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transform: translateY(-2px);
+}
+
+@media only screen and (max-width: 574px) {
+  .sectionLink i {
+    font-size: 18px;
+  }
+}
+
+/* ==========================================================================
+   Иконочный шрифт icomoon
+   ========================================================================== */
+
+.icon {
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'icomoon' !important;
+  display: block;
+}
+
+.iconAngleRight::before {
+  content: '\e904';
+}
+
+.iconCalendarClock::before {
+  content: '\e909';
+}
+
+/* ==========================================================================
+   Сетка: bootstrap `.row` / `.row > *` / `.col` + переопределения main.css
+   ========================================================================== */
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+
+  /* main.css: .row */
+  --local-space: var(--space-16);
+  margin-left: calc(0px - var(--local-space) / 2);
+  margin-right: calc(0px - var(--local-space) / 2);
+  row-gap: var(--local-space);
+}
+
+.row > div {
+  /* bootstrap: .row > * */
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  /* main.css: .row > div */
+  padding: 0 calc(var(--local-space) / 2);
+}
+
+/* .news-section > .row > div */
+.section > .row > div {
+  flex: unset;
+  width: calc(100% + (100vw - var(--width-container)) / 2);
+}
+
+.section > .row > div:nth-child(1) {
+  width: 41.6667%;
+}
+
+@media only screen and (max-width: 1400px) {
+  .section > .row > div:nth-child(1) {
+    width: 37.5%;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .section > .row > div:nth-child(1) {
+    width: 66.6667%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .section > .row > div:nth-child(1) {
+    width: 58.3333%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .section > .row > div:nth-child(1) {
+    width: 100%;
+  }
+}
+
+.section > .row > div:nth-child(2) {
+  width: 20.8333%;
+}
+
+@media only screen and (max-width: 1400px) {
+  .section > .row > div:nth-child(2) {
+    width: 25%;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .section > .row > div:nth-child(2) {
+    width: 33.3333%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .section > .row > div:nth-child(2) {
+    width: 41.6667%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .section > .row > div:nth-child(2) {
+    width: 100%;
+  }
+}
+
+.section > .row > div:nth-child(3) {
+  width: 37.5%;
+}
+
+@media only screen and (max-width: 1199px) {
+  .section > .row > div:nth-child(3) {
+    width: 100%;
+  }
+}
+
+/* bootstrap: .d-none / .d-block / .d-sm-block / .d-sm-none */
+.dNone {
+  display: none !important;
+}
+
+.dBlock {
+  display: block !important;
+}
+
+@media (min-width: 576px) {
+  .dSmBlock {
+    display: block !important;
+  }
+
+  .dSmNone {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   .news-right — колонка с силуэтом здания
+   ========================================================================== */
+
+.newsRight {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+}
+
+@media only screen and (max-width: 991px) {
+  .newsRight {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+  }
+
+  .newsRight > * {
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 991px) and (max-width: 768px) {
+  .newsRight > * {
+    width: 100%;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+}
+
+.newsRight::after {
+  content: '';
+  position: absolute;
+  right: var(--space-16);
+  top: 0;
+  height: 100%;
+  width: 128px;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-image: url('/images/news-frame.png');
+  opacity: 0.2;
+  z-index: -1;
+}
+
+/* ==========================================================================
+   .news-card — три варианта: _1 (крупная, sticky), _2, _3 (горизонтальная)
+   ========================================================================== */
+
+.card {
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.card:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+.card1 {
+  --local-ratio: 1.43;
+  --local-nav-height: 38px;
+  --local-info-padding-y: 16px;
+  --local-nav-color: #fff;
+  position: sticky;
+  top: calc(var(--height-header) + 16px);
+}
+
+.card2 {
+  --local-ratio: 1.53;
+  --local-nav-height: 34px;
+  --local-info-padding-y: 8px;
+  --local-nav-color: #fff;
+}
+
+.card3 {
+  --local-ratio: 1.51;
+  --local-nav-color: #656975;
+  display: flex;
+}
+
+@media only screen and (max-width: 574px) {
+  .card3 {
+    flex-wrap: wrap;
+  }
+}
+
+/* --- Картинка ------------------------------------------------------------- */
+
+.cardImage {
+  display: block;
+}
+
+.card3 .cardImage {
+  --local-width: 196px;
+  width: var(--local-width);
+  min-width: var(--local-width);
+  margin-right: 16px;
+}
+
+@media only screen and (max-width: 574px) {
+  .card3 .cardImage {
+    --local-width: 100%;
+    margin-right: 0px;
+    margin-bottom: 16px;
+  }
+}
+
+.cardImageWrapper {
+  aspect-ratio: var(--local-ratio);
+}
+
+.cardImageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  object-position: center top;
+  /*
+   * В оригинале у <img> остаются значения из bootstrap reboot.
+   * Tailwind preflight ставит `display: block` и `max-width: 100%` —
+   * возвращаем исходные, чтобы computed styles совпадали один в один.
+   */
+  display: inline;
+  max-width: none;
+  vertical-align: middle;
+}
+
+/* --- Текстовый блок ------------------------------------------------------ */
+
+.cardInfo {
+  position: relative;
+}
+
+.card1 .cardInfo,
+.card2 .cardInfo {
+  padding-top: calc(var(--local-nav-height) / 2 + var(--local-info-padding-y));
+}
+
+.card3 .cardInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardTitle {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+  margin: 0;
+  font-weight: 500;
+}
+
+.card1 .cardTitle {
+  color: rgb(29, 37, 60);
+  font-family: var(--font-700);
+  font-size: var(--size-text-28);
+  line-height: 140%;
+  letter-spacing: -0.28px;
+}
+
+.card2 .cardTitle {
+  color: var(--black-1);
+  font-family: var(--font-700);
+  font-size: var(--size-text-20);
+  line-height: 140%;
+  letter-spacing: -0.2px;
+}
+
+.card3 .cardTitle {
+  color: var(--black-1);
+  font-family: var(--font-700);
+  font-size: var(--size-text-20);
+  line-height: 140%;
+  letter-spacing: -0.2px;
+}
+
+/* --- Дата и просмотры ---------------------------------------------------- */
+
+.cardNav {
+  display: flex;
+  align-items: center;
+}
+
+.card1 .cardNav,
+.card2 .cardNav {
+  position: absolute;
+  left: 12px;
+  top: 0;
+  transform: translateY(-50%);
+  gap: 8px;
+}
+
+.card3 .cardNav {
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.cardNavItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--local-nav-color);
+  font-family: var(--font-300);
+  font-size: 16px;
+  line-height: 140%;
+  letter-spacing: -0.16px;
+}
+
+.cardNavItem i {
+  font-size: 18px;
+}
+
+.card1 .cardNavItem,
+.card2 .cardNavItem {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgb(20, 87, 149);
+  height: var(--local-nav-height);
+  padding: 0 8px;
+}
+
+.card1 .cardNavItem i,
+.card2 .cardNavItem i {
+  color: var(--local-nav-color);
+}
+
+.card3 .cardNavItem i {
+  color: rgb(17, 140, 108);
+}
+
+/* ==========================================================================
+   Стартовые состояния aos.css
+   Заданы в CSS, чтобы контент не вспыхивал до инициализации GSAP.
+   Медиазапрос повторяет `disable: window.innerWidth < 767` из AOS.init.
+   ========================================================================== */
+
+@media (min-width: 767px) {
+  .row [data-aos='zoom-in'] {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  .row [data-aos='fade-up'] {
+    opacity: 0;
+    transform: translate3d(0, 100px, 0);
+  }
+}

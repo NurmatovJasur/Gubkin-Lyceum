@@ -1,0 +1,405 @@
+/*
+ * «О лицее» — точная копия секции `.about-section` с newuu.uz/en/.
+ *
+ * Все числа взяты один в один из оригинальных стилей:
+ *   bootstrap.min.css  — `.row`, `.row > *`, reboot (`h2`/`h3`: font-weight 500,
+ *                        `p`: margin-top 0 / margin-bottom 1rem)
+ *   main.css           — `.container`, `.row`, `.section-title`, `.button`,
+ *                        `.about-section`, `.about-info*`, `.about-image`,
+ *                        `.about-card*`
+ *   fonts/icomoon      — `[class^="icon-"]` и код глифа \e906 (icon-arrow-right)
+ *
+ * Оригинал опирается на глобальные `:root`-переменные, которые пересчитываются
+ * на брейкпоинтах 1712 / 1400 / 1199 / 991 / 768 / 574. Здесь те же переменные
+ * объявлены локально на самой секции, чтобы не трогать дизайн-систему сайта
+ * (тот же приём, что в NewsFeed.module.css).
+ *
+ * Единственное отличие от оригинала — вместо одной статичной фотографии
+ * в среднюю колонку встроена карусель (AboutPhotoSlider). Её рамка
+ * повторяет геометрию `.about-image` до пикселя: aspect-ratio 1.7/1,
+ * border-radius 16px, position sticky / top 0.
+ */
+
+/* ==========================================================================
+   :root оригинала, локально на секции
+   ========================================================================== */
+
+.section {
+  --font-300: 'MuseoSansCyrl-300', sans-serif;
+  --font-500: 'MuseoSansCyrl-500', sans-serif;
+  --font-700: 'MuseoSansCyrl-700', sans-serif;
+
+  --white-1: rgba(255, 255, 255, 1);
+
+  --linear-2: linear-gradient(90deg, #145795 0%, #118c6c 100%);
+
+  --space-16: 16px;
+  --space-120: 120px;
+
+  --size-text-48: 48px;
+  --size-text-18: 18px;
+
+  --size-btn-48: 48px;
+  --width-container: 1680px;
+}
+
+@media only screen and (max-width: 1712px) {
+  .section {
+    --size-text-48: 34px;
+    --size-text-18: 16px;
+
+    --size-btn-48: 44px;
+    --width-container: 1368px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .section {
+    --space-120: 100px;
+    --space-16: 14px;
+
+    --size-btn-48: 40px;
+    --width-container: 1140px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .section {
+    --space-120: 80px;
+    --space-16: 12px;
+
+    --size-text-48: 34px;
+    --size-text-18: 16px;
+
+    --width-container: 100%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .section {
+    --space-120: 60px;
+    --space-16: 12px;
+
+    --size-text-48: 35px;
+    --size-text-18: 16px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .section {
+    --space-120: 48px;
+    --space-16: 12px;
+
+    --size-text-48: 33px;
+    --size-text-18: 16px;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .section {
+    --space-120: 40px;
+    --space-16: 12px;
+
+    --size-text-48: 32px;
+    --size-text-18: 16px;
+  }
+}
+
+/* ==========================================================================
+   `.container` + `.about-section`
+   ========================================================================== */
+
+.section {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: calc(var(--width-container) + var(--space-16) * 2);
+  margin: 0 auto;
+  /* `padding-bottom` — из оригинала. Сверху в оригинале отступ даёт hero,
+     у нас — собственный, тем же шагом сетки. */
+  padding: var(--space-120) var(--space-16);
+}
+
+/* `.row` main.css: --local-space = --space-16 */
+.row {
+  --local-space: var(--space-16);
+
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: calc(0px - var(--local-space) / 2);
+  margin-right: calc(0px - var(--local-space) / 2);
+  row-gap: var(--local-space);
+}
+
+.row > div {
+  flex-shrink: 0;
+  max-width: 100%;
+  padding: 0 calc(var(--local-space) / 2);
+}
+
+/* `.about-section > .row > div` — ширины колонок оригинала. */
+.colInfo {
+  width: 33.3333%;
+}
+
+.colImage {
+  width: 29.1667%;
+}
+
+.colCards {
+  width: 37.5%;
+}
+
+@media only screen and (max-width: 991px) {
+  .colInfo {
+    width: 100%;
+  }
+
+  .colImage,
+  .colCards {
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .colImage,
+  .colCards {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Левая колонка: заголовок, текст, кнопка
+   ========================================================================== */
+
+.info {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* `.section-title` + `.about-info__title` */
+.title {
+  margin: 0 0 16px;
+  color: #070c1c;
+  font-family: var(--font-700);
+  font-weight: 500;
+  font-size: var(--size-text-48);
+  line-height: 120%;
+  letter-spacing: -0.48px;
+}
+
+@media only screen and (max-width: 574px) {
+  .title {
+    font-size: 24px;
+  }
+}
+
+.title span {
+  background: var(--linear-2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text {
+  margin: 0 0 16px;
+  overflow: hidden;
+  color: #1d253c;
+  font-family: var(--font-300);
+  font-size: var(--size-text-18);
+  font-style: normal;
+  line-height: 140%;
+  letter-spacing: -0.18px;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* `.button` + `.about-info__btn` */
+.btn {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: max-content;
+  height: var(--size-btn-48);
+  padding: 0 14px;
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #3e7cb5 0%, #39a589 100%);
+  box-shadow:
+    0 2px 0 0 #29676a,
+    0 8px 16px 0 rgba(255, 255, 255, 0.1) inset,
+    0 2px 0 0 rgba(255, 255, 255, 0.1) inset;
+  color: var(--white-1);
+  font-family: var(--font-500);
+  font-size: var(--size-text-18);
+  line-height: 140%;
+  letter-spacing: -0.18px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  color: var(--white-1);
+}
+
+@media only screen and (max-width: 1400px) {
+  .btn {
+    padding: 0 12px;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .btn {
+    padding: 0 10px;
+  }
+}
+
+/* icomoon: `.icon-arrow-right` */
+.btnIcon {
+  margin: 0;
+  color: var(--white-1);
+  font-family: icomoon;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btnIcon::before {
+  content: '\e906';
+}
+
+/* ==========================================================================
+   Средняя колонка: рамка `.about-image` с бегущей лентой снимков
+   ========================================================================== */
+
+.image {
+  position: sticky;
+  top: 0;
+  aspect-ratio: 1.7 / 1;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #eaeef5;
+  /* Стрелки и точки карусели позиционируются от рамки. */
+  isolation: isolate;
+}
+
+/* ==========================================================================
+   Правая колонка: плитка счётчиков
+   ========================================================================== */
+
+/* `.row.about-card__wrapper` */
+.cards {
+  --local-space: 12px;
+
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(0px - var(--local-space) / 2);
+  margin-left: calc(0px - var(--local-space) / 2);
+  margin-right: calc(0px - var(--local-space) / 2);
+  row-gap: 0;
+  height: calc(100% + var(--local-space));
+  background: var(--linear-2);
+}
+
+/* `.about-card__wrapper > div` (.col-6) */
+.cardCell {
+  position: relative;
+  flex: 0 0 auto;
+  width: 50%;
+  max-width: 100%;
+  padding: 0;
+  border: calc(var(--local-space) / 2) solid #fff;
+  border-radius: 16px;
+}
+
+.cardCell::after {
+  content: '';
+  position: absolute;
+  left: calc(0px - var(--local-space) / 2);
+  right: calc(0px - var(--local-space) / 2);
+  top: calc(0px - var(--local-space) / 2);
+  bottom: calc(0px - var(--local-space) / 2);
+  border: calc(var(--local-space) / 2) solid #fff;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px;
+}
+
+.cardIcon {
+  width: 28px;
+  margin-bottom: auto;
+}
+
+.cardIcon svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cardIcon svg path {
+  fill: #fff;
+}
+
+.cardCount {
+  display: block;
+  color: #fff;
+  font-family: var(--font-500);
+  font-size: 26px;
+  font-style: normal;
+  line-height: 150%;
+}
+
+/*
+ * Неподтверждённая цифра: «[УТОЧНИТЬ]» вместо счётчика (data/statistics.ts).
+ * line-height зафиксирован в 39px — ровно строка счётчика (26px × 150%),
+ * чтобы плашка-заглушка не меняла высоту плитки.
+ */
+.cardCount[data-pending='true'] {
+  font-size: 17px;
+  line-height: 39px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cardTitle {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-300);
+  font-weight: 500;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 140%;
+  opacity: 0.8;
+}
+
+.cardBack {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+}
+
+.cardBack svg {
+  display: block;
+  width: 60px;
+}
+
+@media only screen and (max-width: 574px) {
+  .cardBack {
+    display: none;
+  }
+}

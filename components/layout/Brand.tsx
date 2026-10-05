@@ -11,17 +11,20 @@ import { cn } from '@/lib/utils';
 export function Brand({
   logo,
   className,
+  labelClassName,
   compact = false
 }: {
   logo: string | null;
   className?: string;
+  /** Классы для текстовой части — например, скрыть подпись на узких экранах. */
+  labelClassName?: string;
   compact?: boolean;
 }) {
   return (
     <Link
       href="/"
       aria-label={`${site.fullName} — на главную`}
-      className={cn('inline-flex items-center gap-3.5 text-current', className)}
+      className={cn('inline-flex min-w-0 items-center gap-2.5 text-current sm:gap-3.5', className)}
     >
       {logo ? (
         <Image
@@ -45,11 +48,16 @@ export function Brand({
         </span>
       )}
 
-      <span className="grid gap-0.5">
-        <span className="block text-[11.5px] leading-tight font-bold tracking-[0.055em] uppercase sm:text-[13px]">
+      {/*
+        `min-w-0` + `truncate`: на экранах уже 340px название перестаёт
+        помещаться рядом с языком и кнопкой меню. Вместо того чтобы
+        вытолкнуть их за край, строка сокращается многоточием.
+      */}
+      <span className={cn('grid min-w-0 gap-0.5', labelClassName)}>
+        <span className="truncate text-[10.5px] leading-tight font-bold tracking-[0.05em] uppercase sm:text-[13px] sm:tracking-[0.055em]">
           {site.nameLines[0]}
         </span>
-        <span className="block text-[11px] leading-tight tracking-[0.035em] opacity-70 sm:text-xs">
+        <span className="truncate text-[10px] leading-tight tracking-[0.03em] opacity-70 sm:text-xs sm:tracking-[0.035em]">
           {site.nameLines[1]}
         </span>
       </span>

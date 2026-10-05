@@ -21,6 +21,20 @@
   --color-blue-light: #7092e4;
   --color-navy: #0a1a3c;
 
+  /*
+   * Секция «Жизнь в лицее»: небо, силуэт здания и рамки арок.
+   *
+   * По макету вся секция залита одним тоном: корпус здания и фон под арками
+   * совпадают (`campus` = `campus-wall`), а здание читается только кромкой
+   * крыши. Второй тон (`edge` = `arch`) — эта кромка и рамка «оконца».
+   */
+  --color-campus: #d9eafd;
+  --color-campus-wall: #d9eafd;
+  --color-campus-edge: #a1c2e7;
+  --color-campus-deep: #a1c2e7;
+  --color-campus-arch: #a1c2e7;
+  --color-campus-dot: #2a407a;
+
   /* Текст */
   --color-muted: #565656;
   --color-subtle: #8a8a8a;
@@ -201,4 +215,53 @@
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* ==========================================================================
+   ШРИФТЫ СЕКЦИЙ, СКЛОНИРОВАННЫХ С newuu.uz
+   Гарнитуры оригинала: MuseoSansCyrl и иконочный icomoon.
+   Файлы скачаны в /public/fonts, набор начертаний и порядок форматов
+   повторяют `assets/public/fonts/font/stylesheet.css` и
+   `assets/public/fonts/icomoon/style.css`.
+   Используются только внутри About.module.css и NewsFeed.module.css.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'MuseoSansCyrl-300';
+  src:
+    url('/fonts/MuseoSansCyrl-300.woff2') format('woff2'),
+    url('/fonts/MuseoSansCyrl-300.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MuseoSansCyrl-500';
+  src:
+    url('/fonts/MuseoSansCyrl-500.woff2') format('woff2'),
+    url('/fonts/MuseoSansCyrl-500.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MuseoSansCyrl-700';
+  src:
+    url('/fonts/MuseoSansCyrl-700.woff2') format('woff2'),
+    url('/fonts/MuseoSansCyrl-700.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'icomoon';
+  src:
+    url('/fonts/icomoon.ttf') format('truetype'),
+    url('/fonts/icomoon.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
 }

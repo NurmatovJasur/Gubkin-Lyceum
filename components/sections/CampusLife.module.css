@@ -1,0 +1,456 @@
+/*
+ * «Жизнь в лицее» — точная копия секции `.campus-section` с newuu.uz/en/.
+ *
+ * Все числа (отступы, брейкпоинты, размеры шрифта, радиусы, тайминги) взяты
+ * один в один из оригинального `assets/public/css/main.css` и из настроек
+ * Owl Carousel 2 (`assets/public/js/carousels.js`, объект `CCampus`).
+ *
+ * Оригинал опирается на глобальные переменные `:root`, которые меняются на
+ * брейкпоинтах 1712 / 1400 / 1199 / 991 / 768 / 574. Здесь те же переменные
+ * объявлены локально на самой секции, чтобы не трогать дизайн-систему сайта.
+ *
+ * Карусель в оригинале — Owl Carousel 2. Здесь она воспроизведена на CSS и
+ * React (components/ui/CampusWindows.tsx) с той же математикой:
+ *   ширина карточки = (ширина ленты + margin) / items − margin
+ *   шаг прокрутки   = (ширина ленты + margin) / items
+ *   переход         = transform 0.8s ease   (smartSpeed: 800)
+ */
+
+.section {
+  /*
+   * Шрифт — свой, сайта: в оригинале здесь MuseoSansCyrl, но гарнитуру сайта
+   * не меняем. Два начертания оригинала (`--font-500` для текста и
+   * `--font-700` для заголовка) заменены на веса той же гарнитуры.
+   */
+  --weight-500: 400;
+  --weight-700: 700;
+
+  /* --- Типографика: :root-переменные оригинала --------------------------- */
+  --size-text-48: 48px;
+  --size-text-20: 20px;
+  --size-text-18: 18px;
+  --size-btn-48: 48px;
+  --space-20: 20px;
+
+  /* --- Owl: CCampus.items / CCampus.margin ------------------------------- */
+  --items: 6;
+  --margin: 105px;
+
+  padding: 60px 140px 72px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Силуэт здания: оригинальный `images/frame.png`. */
+.section::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/campus-frame.png');
+  background-repeat: no-repeat;
+  background-position: center 0;
+  background-size: 100% auto;
+  z-index: -1;
+}
+
+/* Нижняя половина секции залита сплошным цветом «земли». */
+.section::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 50%;
+  background-color: rgb(217, 234, 253);
+  z-index: -2;
+}
+
+@media only screen and (min-width: 1921px) {
+  .section {
+    padding-bottom: 90px;
+  }
+}
+
+@media only screen and (max-width: 1712px) {
+  .section {
+    --size-text-48: 34px;
+    --size-text-20: 19px;
+    --size-text-18: 16px;
+    --size-btn-48: 44px;
+
+    padding-top: 32px;
+    padding-bottom: 56px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .section {
+    --size-btn-48: 40px;
+    --space-20: 18px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .section {
+    --size-text-20: 18px;
+    --space-20: 16px;
+
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-bottom: 48px;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .section {
+    --size-text-48: 35px;
+
+    padding-bottom: 40px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .section {
+    --size-text-48: 33px;
+
+    padding-bottom: 32px;
+  }
+
+  .section::before {
+    background-size: 200% auto;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .section {
+    --size-text-48: 32px;
+
+    padding-left: 56px;
+    padding-right: 56px;
+    padding-bottom: 24px;
+  }
+
+  .section::after {
+    height: 60%;
+  }
+}
+
+/* --- Шапка секции -------------------------------------------------------- */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 70px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 1712px) {
+  .logo {
+    margin-bottom: 12px;
+  }
+}
+
+.title {
+  color: #070c1c;
+  font-size: var(--size-text-48);
+  font-weight: var(--weight-700);
+  line-height: 120%;
+  letter-spacing: -0.48px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* Последние слова заголовка — градиентной заливкой, как в оригинале. */
+.title span {
+  background: linear-gradient(90deg, #145795 0%, #118c6c 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text {
+  max-width: 300px;
+  color: #070c1c;
+  text-align: center;
+  font-size: var(--size-text-18);
+  font-style: normal;
+  font-weight: var(--weight-500);
+  line-height: 140%;
+  letter-spacing: -0.36px;
+  opacity: 0.6;
+  margin-bottom: 80px;
+}
+
+@media only screen and (max-width: 1199px) {
+  .text {
+    margin-bottom: 40px;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .text {
+    margin-bottom: 24px;
+  }
+}
+
+/* --- Карусель ------------------------------------------------------------ */
+
+.carousel {
+  position: relative;
+  max-width: 1640px;
+}
+
+@media only screen and (min-width: 1921px) {
+  .carousel {
+    margin: 90px auto 0 auto;
+  }
+}
+
+/* Видимое «окно» ленты: всё, что шире, скрывается (owl-stage-outer). */
+.viewport {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+/*
+ * Лента. Её ширина равна ширине «окна», а карточки выходят за эти пределы —
+ * ровно так же, как у Owl. Сам сдвиг приходит инлайном из JS.
+ */
+.track {
+  display: flex;
+  width: 100%;
+  transition: transform 0.8s ease; /* smartSpeed: 800 — owl ставит `transition: 0.8s` */
+}
+
+/* Пересчёт при смене ширины окна и перетаскивание — мгновенно, без анимации. */
+.track[data-instant='true'] {
+  transition: none;
+}
+
+.slide {
+  flex: 0 0 calc((100% + var(--margin)) / var(--items) - var(--margin));
+  margin-right: var(--margin);
+  min-width: 0;
+}
+
+/* Owl.responsive: число карточек и просвет между ними. */
+@media only screen and (max-width: 1399px) {
+  .section {
+    --margin: 32px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .section {
+    --items: 5;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .section {
+    --items: 4;
+    --margin: 24px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .section {
+    --items: 3;
+    --margin: 16px;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .section {
+    --items: 2;
+    --margin: 12px;
+  }
+}
+
+/* --- Карточка ------------------------------------------------------------ */
+
+.item {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+/*
+ * Появление карточек — та же анимация, что у оригинала: AOS `fade-down`
+ * с атрибутами `data-aos="fade-down" data-aos-duration="500"` и задержками
+ * 0 / 200 / 400 / 600 мс по порядку карточек.
+ *
+ * Стартовое состояние и переход — дословно из aos.css:
+ *   [data-aos^="fade"]            → opacity: 0; transition-property: opacity, transform
+ *   [data-aos="fade-down"]        → transform: translate3d(0, -100px, 0)
+ *   [data-aos-duration="500"]     → transition-duration: .5s
+ *   [data-aos^="fade"].aos-animate→ opacity: 1; transform: translateZ(0)
+ *   [data-aos-delay="N"].aos-animate → transition-delay: N
+ * Умолчания AOS.init: easing `ease`, порог срабатывания 120px, `once: false`
+ * (появление повторяется при каждом возврате к секции).
+ */
+.item {
+  opacity: 0;
+  transform: translate3d(0, -100px, 0);
+  transition-property: opacity, transform;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+}
+
+.item[data-shown='true'] {
+  opacity: 1;
+  transform: translateZ(0);
+  transition-delay: var(--aos-delay, 0s);
+}
+
+/* `AOS.init({ disable: innerWidth < 767 })` — на телефонах анимации нет. */
+@media only screen and (max-width: 766px) {
+  .item,
+  .item[data-shown='true'] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .item[data-shown='true'] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.itemImage {
+  position: relative;
+  border: 8px solid #a1c2e7;
+  border-radius: 120px 120px 24px 24px;
+  overflow: hidden;
+  aspect-ratio: 0.7982;
+  margin-bottom: 12px;
+}
+
+.itemImage img {
+  width: 100%;
+  height: 100%;
+  object-position: center;
+  object-fit: cover;
+}
+
+.itemTitle {
+  color: #070c1c;
+  text-align: center;
+  font-size: var(--size-text-20);
+  font-weight: var(--weight-500);
+  font-style: normal;
+  line-height: 150%;
+  letter-spacing: -0.4px;
+}
+
+@media only screen and (max-width: 574px) {
+  .itemTitle {
+    font-size: 15px;
+  }
+
+  /* Отдельное правило оригинала: на телефонах заголовок секции — 24px. */
+  .title {
+    font-size: 24px;
+  }
+}
+
+/* --- Стрелки ------------------------------------------------------------- */
+
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  margin-top: 0;
+  --local-minus-value: 60px;
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 1199px) {
+  .navigation {
+    --local-minus-value: 24px;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .navigation {
+    --local-minus-value: 8px;
+  }
+}
+
+.navButton {
+  border-radius: 12px;
+  border: 1px solid #a1c2e7;
+  background: #d9eafd;
+  font-size: calc(var(--size-btn-48) / 2 - 2px);
+  width: var(--size-btn-48);
+  aspect-ratio: 1/1;
+  padding: 0;
+  cursor: pointer;
+  color: #000;
+  line-height: 1;
+  text-align: center;
+  pointer-events: auto;
+}
+
+/* Иконка занимает ровно em-квадрат иконочного шрифта оригинала. */
+.navButton svg {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: top;
+  fill: currentColor;
+}
+
+.prev {
+  transform: translateX(calc(0px - (100% + var(--local-minus-value))));
+}
+
+.next {
+  transform: translateX(calc(100% + var(--local-minus-value)));
+}
+
+/* --- Точки --------------------------------------------------------------- */
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: var(--space-20);
+}
+
+.dot {
+  width: 14px;
+  height: 8px;
+  background-color: rgba(42, 64, 122, 1);
+  border: 0;
+  padding: 0;
+  border-radius: 8px;
+  opacity: 0.3;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.dot[data-active='true'] {
+  width: 32px;
+  opacity: 1;
+}

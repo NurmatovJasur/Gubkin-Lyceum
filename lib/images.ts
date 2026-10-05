@@ -40,10 +40,10 @@ export const resolveImages = (images: SiteImage[]): ResolvedImage[] =>
   images.map(resolveImage);
 
 /**
- * Официальный логотип лицея.
- * Положите `logo.svg` или `logo.png` в `public/images/` — он автоматически
- * заменит служебную монограмму в шапке и подвале.
- * [ЗАМЕНИТЬ НА ОФИЦИАЛЬНЫЙ ЛОГОТИП ЛИЦЕЯ]
+ * Официальный логотип лицея — `public/images/logo.png`.
+ * Он выводится в шапке и подвале. Чтобы заменить знак, положите файл с тем
+ * же именем (или `logo.svg`) — ничего в коде менять не нужно. Если файла
+ * нет, вместо него показывается служебная монограмма из `Brand`.
  */
 export const getLogo = (): string | null => {
   const candidate = ['logo.svg', 'logo.png'].find(fileExists);

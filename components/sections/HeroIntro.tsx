@@ -23,12 +23,22 @@ export function HeroIntro({ children, className }: { children: ReactNode; classN
       const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
       timeline
-        .from('[data-hero-line]', {
-          yPercent: 110,
+        .from('[data-hero-mark]', {
+          y: 18,
           opacity: 0,
-          duration: 1.1,
-          stagger: 0.09
+          duration: 0.9,
+          stagger: 0.08
         })
+        .from(
+          '[data-hero-line]',
+          {
+            yPercent: 110,
+            opacity: 0,
+            duration: 1.1,
+            stagger: 0.09
+          },
+          '-=0.55'
+        )
         .from('[data-hero-meta]', { y: 20, opacity: 0, duration: 0.8 }, '-=0.6')
         .from('[data-hero-actions]', { y: 20, opacity: 0, duration: 0.8 }, '-=0.6');
 
