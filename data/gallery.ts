@@ -77,3 +77,25 @@ export const parallaxGallery: SiteImage[] = [
     ratio: '16/9'
   }
 ];
+
+/**
+ * Кадры для 3D-галереи «Лицей в кадре» на странице «О лицее».
+ *
+ * Отдельного набора фотографий здесь нет: в коридор отправляются уже
+ * имеющиеся снимки — галерея секции «О лицее», полноширинные кадры и
+ * главное фото. Порядок перемешан, чтобы рядом не оказались два кадра
+ * с одной поездки. Чтобы добавить фотографию в полёт, достаточно положить
+ * файл в `public/images/` и дописать его в этот список.
+ */
+export const flightGallery: SiteImage[] = [
+  aboutGallery[0],
+  parallaxGallery[0],
+  aboutGallery[3],
+  aboutGallery[1],
+  parallaxGallery[1],
+  aboutGallery[4],
+  aboutImage,
+  aboutGallery[2],
+  parallaxGallery[2],
+  aboutGallery[5]
+];

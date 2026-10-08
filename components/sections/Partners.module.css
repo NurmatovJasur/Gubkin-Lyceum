@@ -1,0 +1,271 @@
+/*
+ * «Партнёры» — точная копия секции `section.partners-section` с newuu.uz/.
+ *
+ * Все числа взяты один в один из оригинальных стилей:
+ *   bootstrap.min.css  — `.row`, `.row > *`, `.col-6`, `.col-sm-4`,
+ *                        `.col-md-3`, `.col-lg-2`,
+ *                        reboot (`h2`: margin-top 0, font-weight 500;
+ *                        `img`: vertical-align middle)
+ *   main.css           — `.container`, `.row`, `.row > div`, `.section-title`,
+ *                        `.section-title__center`, `.section-title span`,
+ *                        `.partners-section`, `.partners-section .container`,
+ *                        `.partners-item`, `.partners-item img`
+ *   aos.css            — `[data-aos="flip-right"]` (стартовое состояние)
+ *
+ * Оригинал опирается на глобальные `:root`-переменные, которые пересчитываются
+ * на брейкпоинтах 1712 / 1400 / 1199 / 991 / 768 / 574. Здесь те же переменные
+ * объявлены локально на самой секции, чтобы не трогать дизайн-систему сайта.
+ *
+ * Анимация. У каждой плитки в оригинале висит AOS: `data-aos="flip-right"`,
+ * `data-aos-duration="500"`, `data-aos-delay` = индекс × 200 — то есть
+ * логотипы разворачиваются цепочкой слева направо. Параметры и стартовое
+ * состояние перенесены сюда и в Partners.tsx, само движение проигрывает
+ * GSAP ScrollTrigger (components/animations/AosReveal.tsx).
+ *
+ * Отличия от оригинала (по заданию):
+ *   1. Вкладок нет — логотипы идут одним списком, поэтому правила
+ *      `.tab*` и `.tab-pane.fade` из оригинала здесь не нужны.
+ *   2. Заголовок по-русски. Геометрия, тайминги и ассеты те же.
+ */
+
+/* ==========================================================================
+   :root оригинала, локально на секции
+   ========================================================================== */
+
+.section {
+  --font-700: 'MuseoSansCyrl-700', sans-serif;
+
+  --black-7: rgba(223, 228, 237, 1);
+  --black-9: rgba(239, 243, 249, 1);
+
+  --linear-2: linear-gradient(90deg, #145795 0%, #118c6c 100%);
+
+  --size-text-48: 48px;
+
+  --space-120: 120px;
+  --space-32: 32px;
+  --space-16: 16px;
+
+  --width-container: 1680px;
+}
+
+@media only screen and (max-width: 1712px) {
+  .section {
+    --size-text-48: 34px;
+
+    --width-container: 1368px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .section {
+    --space-120: 100px;
+    --space-32: 24px;
+    --space-16: 14px;
+
+    --width-container: 1140px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .section {
+    --size-text-48: 34px;
+
+    --space-120: 80px;
+    --space-32: 20px;
+    --space-16: 12px;
+
+    --width-container: 100%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .section {
+    --size-text-48: 35px;
+
+    --space-120: 60px;
+    --space-32: 20px;
+    --space-16: 12px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .section {
+    --size-text-48: 33px;
+
+    --space-120: 48px;
+    --space-32: 20px;
+    --space-16: 12px;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .section {
+    --size-text-48: 32px;
+
+    --space-120: 40px;
+    --space-32: 20px;
+    --space-16: 12px;
+  }
+}
+
+/* ==========================================================================
+   .partners-section
+   ========================================================================== */
+
+.section {
+  padding-top: var(--space-120);
+  padding-bottom: calc(var(--space-120) + 80px);
+}
+
+@media only screen and (max-width: 1199px) {
+  .section {
+    padding-bottom: calc(var(--space-120) + 0px);
+  }
+}
+
+/* .container + .partners-section .container */
+.container {
+  max-width: calc(var(--width-container) + var(--space-16) * 2);
+  margin: 0 auto;
+  padding: 0 var(--space-16);
+  width: 100%;
+  text-align: center;
+}
+
+/* ==========================================================================
+   .section-title
+   ========================================================================== */
+
+/* `.section-title.section-title__center` + reboot `h2` */
+.title {
+  margin-top: 0;
+  font-weight: 500;
+  color: #070c1c;
+  font-family: var(--font-700);
+  font-size: var(--size-text-48);
+  line-height: 120%;
+  letter-spacing: -0.48px;
+  margin-bottom: var(--space-32);
+  text-align: center;
+}
+
+/* `.section-title` в оригинале на ≤574px жёстко переопределяет размер */
+@media only screen and (max-width: 574px) {
+  .title {
+    font-size: 24px;
+  }
+}
+
+/* .section-title span */
+.title span {
+  background: var(--linear-2) text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   .row / .row > div / .col-*
+   ========================================================================== */
+
+.row {
+  --local-space: var(--space-16);
+
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 0;
+  margin-left: calc(0px - var(--local-space) / 2);
+  margin-right: calc(0px - var(--local-space) / 2);
+  row-gap: var(--local-space);
+}
+
+/* `.row > *` (bootstrap) + `.row > div` (main.css) + `.col-6` */
+.col {
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  width: 50%;
+  max-width: 100%;
+  margin-top: 0;
+  padding: 0 calc(var(--local-space) / 2);
+}
+
+/* .col-sm-4 */
+@media (min-width: 576px) {
+  .col {
+    width: 33.33333333%;
+  }
+}
+
+/* .col-md-3 */
+@media (min-width: 768px) {
+  .col {
+    width: 25%;
+  }
+}
+
+/* .col-lg-2 */
+@media (min-width: 992px) {
+  .col {
+    width: 16.66666667%;
+  }
+}
+
+/* ==========================================================================
+   .partners-item
+   ========================================================================== */
+
+.item {
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--black-7);
+  background: var(--black-9);
+  padding: 10px;
+  aspect-ratio: 1.41 / 1;
+  /* в оригинале курсор приходит от `a[href=""]`; здесь ссылка без href */
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Цепочка появления: AOS `flip-right` (aos.css)
+   --------------------------------------------------------------------------
+   Само движение проигрывает GSAP ScrollTrigger (components/animations/
+   AosReveal.tsx) — он же повторяет момент старта, duration, delay и easing.
+   Здесь только стартовое состояние из aos.css, чтобы плитки не мигнули
+   до инициализации скрипта:
+
+     [data-aos^="flip"][data-aos^="flip"] { backface-visibility: hidden }
+     [data-aos="flip-right"]              { transform: perspective(2500px)
+                                                       rotateY(100deg) }
+
+   `transition-property: transform` из aos.css сознательно не переносим:
+   в оригинале переход рисует CSS, здесь — GSAP, и CSS-переход сглаживал бы
+   его покадровые значения второй раз.
+
+   Стартовый поворот сюда сознательно НЕ переносим, хотя в aos.css он есть
+   (`[data-aos="flip-right"] { transform: perspective(2500px) rotateY(100deg) }`).
+   Повёрнутая на 100° плитка вместе с `backface-visibility: hidden` не видна,
+   и если бы это состояние задавалось стилями, то любой сбой скрипта оставлял
+   бы секцию пустой. Поворот ставит `gsap.set` в layout-эффекте — он
+   выполняется до отрисовки, так что мигания нет, а при неработающем JS
+   логотипы просто остаются видимыми.
+   ========================================================================== */
+
+.item[data-aos^='flip'] {
+  backface-visibility: hidden;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  object-position: center center;
+  object-fit: contain;
+  /*
+   * Оригинал оставляет <img> таким, каким его отдаёт bootstrap reboot:
+   * строчным и без ограничения по ширине. Tailwind preflight в этом проекте
+   * переводит все картинки в `display: block; max-width: 100%`, а это сдвигает
+   * логотип внутри плитки на доли пикселя и меняет её высоту на 1px.
+   * Возвращаем значения оригинала.
+   */
+  display: inline;
+  max-width: none;
+  vertical-align: middle;
+}

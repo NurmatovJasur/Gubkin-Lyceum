@@ -56,25 +56,32 @@ export type SocialLink = {
   id: SocialId;
   /** Подпись для screen reader и атрибута title. */
   label: string;
-  href: string;
+  /** `null` — адрес ещё не подтверждён: иконка рисуется без href. */
+  href: string | null;
 };
 
 /**
- * Соцсети лицея. Ссылка, которой ещё нет в site.config (null), просто не
- * попадает в список — выдуманные адреса в разметку не уходят.
+ * Соцсети лицея. Обе сети стоят в шапке и подвале постоянно, а адрес
+ * берётся из site.config: пока там `null` (Instagram — PLACEHOLDER),
+ * иконка выводится без ссылки — тот же приём, что в секциях
+ * «Соцсети» и «Партнёры». Выдуманные адреса в разметку не уходят.
  */
 export const socialLinks: SocialLink[] = [
-  site.contacts.telegram && {
-    id: 'telegram' as const,
-    label: `Telegram — ${site.contacts.telegram.label}`,
-    href: site.contacts.telegram.href
+  {
+    id: 'telegram',
+    label: site.contacts.telegram
+      ? `Telegram — ${site.contacts.telegram.label}`
+      : 'Telegram',
+    href: site.contacts.telegram?.href ?? null
   },
-  site.contacts.instagram && {
-    id: 'instagram' as const,
-    label: `Instagram — ${site.contacts.instagram.label}`,
-    href: site.contacts.instagram.href
+  {
+    id: 'instagram',
+    label: site.contacts.instagram
+      ? `Instagram — ${site.contacts.instagram.label}`
+      : 'Instagram',
+    href: site.contacts.instagram?.href ?? null
   }
-].filter((link): link is SocialLink => link !== null);
+];
 
 /**
  * Языки интерфейса.

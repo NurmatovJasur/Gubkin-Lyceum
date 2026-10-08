@@ -15,13 +15,6 @@ export function CampusLife() {
   const logo = getLogo();
   const items = campusWindows.map((item) => ({ ...item, photo: resolveImage(item.image) }));
 
-  /*
-   * В оригинале лента склеена из двух одинаковых половин, чтобы на широком
-   * экране все шесть мест были заняты и карусель оставалась прокручиваемой.
-   * Повторяем приём: разделов пять, видно до шести.
-   */
-  const track = [...items, ...items];
-
   return (
     <section id="campus-life" aria-label={campusIntro.heading} className={styles.section}>
       <div className={styles.header}>
@@ -38,7 +31,7 @@ export function CampusLife() {
         <p className={styles.text}>{campusIntro.text}</p>
       </div>
 
-      <CampusWindows items={track} />
+      <CampusWindows items={items} />
     </section>
   );
 }

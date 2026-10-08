@@ -14,8 +14,9 @@ const tones: Record<Tone, string> = {
 /**
  * Иконки соцсетей.
  *
- * Список приходит из `data/navigation` и содержит только подтверждённые
- * ссылки: если в site.config нет Instagram, иконка просто не выводится.
+ * Список приходит из `data/navigation`. Сеть, адрес которой ещё не
+ * подтверждён в site.config (Instagram), выводится без href: вид тот же,
+ * клик ничего не делает — как в секциях «Соцсети» и «Партнёры».
  * Пустой список не рисует ничего — вёрстка не ломается.
  */
 export function SocialLinks({
@@ -34,9 +35,9 @@ export function SocialLinks({
       {socialLinks.map((social) => (
         <li key={social.id}>
           <a
-            href={social.href}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...(social.href
+              ? { href: social.href, target: '_blank', rel: 'noopener noreferrer' }
+              : {})}
             aria-label={social.label}
             title={social.label}
             className={cn(

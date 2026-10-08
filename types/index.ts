@@ -6,6 +6,29 @@
  * видимый placeholder — выдуманные факты в код не попадают.
  */
 
+import type { ComponentType, ReactNode, Ref } from 'react';
+
+/**
+ * Тег-обёртка для компонентов со свойством `as` (Container, Section, Reveal).
+ *
+ * Снаружи такие компоненты по-прежнему принимают обычный `React.ElementType`
+ * («любой тег или компонент»), а внутри тег приводится к этому типу.
+ * Причина: @react-three/fiber (3D-галерея на странице «О лицее») дописывает
+ * в глобальный JSX свои элементы — `mesh`, `planeGeometry` и ещё сотни
+ * других. После этого `ElementType` означает «в том числе и они», и общий
+ * для всех вариантов тип пропа `className` схлопывается в `never` —
+ * TypeScript перестаёт принимать `<Tag className=…>`. Здесь перечислено
+ * ровно то, что такие обёртки на тег действительно ставят.
+ */
+export type PolymorphicTag<E extends HTMLElement = HTMLElement> = ComponentType<{
+  children?: ReactNode;
+  className?: string;
+  id?: string;
+  ref?: Ref<E>;
+  'aria-label'?: string;
+  'data-reveal'?: boolean;
+}>;
+
 /** Соотношение сторон фотографии — используется и для placeholder'а. */
 export type AspectRatio = '16/9' | '16/10' | '21/9' | '4/3' | '4/5' | '3/4' | '1/1';
 
@@ -46,8 +69,8 @@ export type Direction = {
   next: string[];
 };
 
-/** Звание для группировки на /teachers — от высшего к младшему, плюс специалисты лицея. */
-export type TeacherRank = 'professor' | 'chief' | 'leading' | 'senior' | 'teacher' | 'staff';
+/** Звание для группировки на /teachers — от высшего к младшему. */
+export type TeacherRank = 'professor' | 'chief' | 'senior' | 'leading';
 
 export type Teacher = {
   id: string;
@@ -74,6 +97,11 @@ export type AdminMember = {
   degree: string | null;
   /** Номер кабинета или null, если не указан. */
   cabinet: string | null;
+  /**
+   * Круг вопросов, с которыми обращаются к сотруднику: 2–4 коротких
+   * пункта для карточки и справочника кабинетов.
+   */
+  scope: string[];
   photo: SiteImage;
 };
 
@@ -82,6 +110,8 @@ export type AdminLevel = {
   id: string;
   number: string;
   title: string;
+  /** Одна строка под заголовком уровня — что это за звено структуры. */
+  caption?: string;
   members: AdminMember[];
 };
 

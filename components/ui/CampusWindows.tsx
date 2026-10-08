@@ -24,19 +24,24 @@ type Item = CampusWindow & { photo: ResolvedImage };
  *
  * Геометрию (ширину карточки и шаг прокрутки) целиком считает CSS — см.
  * CampusLife.module.css. JS нужен только для индекса, точек и перетаскивания.
+ *
+ * Отличие от оригинала: число видимых карточек ограничено их количеством,
+ * поэтому разделы всегда занимают всю ширину ленты. Если они помещаются
+ * целиком (десктоп), стрелки и точки не нужны и не отрисовываются.
  */
 
 /** Owl.responsive: минимальная ширина окна → сколько карточек видно. */
 const BREAKPOINTS: { min: number; items: number; margin: number }[] = [
   { min: 1200, items: 6, margin: 32 },
   { min: 992, items: 5, margin: 32 },
-  { min: 768, items: 4, margin: 24 },
-  { min: 575, items: 3, margin: 16 },
+  /* Ниже 992px четыре арки сжимались бы до ~140px — показываем по две. */
+  { min: 768, items: 2, margin: 24 },
+  { min: 575, items: 2, margin: 16 },
   { min: 0, items: 2, margin: 12 }
 ];
 
-/** Просвет между карточками: с 1400px Owl берёт 105px вместо значения брейкпоинта. */
-const marginFor = (width: number, fallback: number) => (width >= 1400 ? 105 : fallback);
+/** Просвет между карточками: с 1400px он шире, чем на брейкпоинте (у Owl — 105px). */
+const marginFor = (width: number, fallback: number) => (width >= 1400 ? 40 : fallback);
 
 const viewFor = (width: number) => {
   const bp = BREAKPOINTS.find((item) => width >= item.min) ?? BREAKPOINTS[BREAKPOINTS.length - 1];
@@ -82,12 +87,13 @@ export function CampusWindows({ items }: { items: Item[] }) {
   const movedRef = useRef(false);
 
   const count = items.length;
-  /* Задержки идут по разделам: 0, 200, 400… и повторяются на второй половине
-     ленты — ровно как `data-aos-delay` у оригинала. */
-  const unique = new Set(items.map((item) => item.id)).size;
   /* До гидратации число карточек задаётся медиазапросами (см. CSS). */
-  const perView = view?.items ?? 6;
+  const breakpointItems = view?.items ?? BREAKPOINTS[0].items;
+  /* Больше карточек, чем есть, не показать — иначе лента не займёт всю ширину. */
+  const perView = Math.min(breakpointItems, count);
   const maximum = Math.max(0, count - perView);
+  /* Всё видно сразу — прокручивать нечего, значит ни стрелок, ни точек. */
+  const fits = maximum === 0;
   const pages = buildPages(count, perView);
   /* После расширения окна видимых карточек больше — подрезаем сдвиг прямо
      при отрисовке, без лишнего прохода через состояние. */
@@ -179,10 +185,12 @@ export function CampusWindows({ items }: { items: Item[] }) {
    * переход на `transform`, собранный из `var()`, Chrome не перезапускает
    * при смене переменной, и лента замирает на первом шаге.
    */
-  const pitch = view ? (view.width + view.margin) / view.items : 0;
+  const pitch = view ? (view.width + view.margin) / perView : 0;
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
+    /* Прокручивать нечего — протяжка только дёргала бы ленту. */
+    if (fits) return;
 
     dragRef.current = {
       id: event.pointerId,
@@ -222,31 +230,37 @@ export function CampusWindows({ items }: { items: Item[] }) {
     view ? { transform: `translate3d(${drag - current * pitch}px, 0, 0)` } : undefined
   ) as CSSProperties | undefined;
 
-  /* Инлайн-переменные появляются только после гидратации (см. комментарий выше). */
-  const carouselStyle = (
-    view ? { '--items': view.items, '--margin': `${view.margin}px` } : undefined
-  ) as CSSProperties | undefined;
+  /*
+   * `--count` известен и на сервере, а `--items` / `--margin` приходят только
+   * после гидратации (см. комментарий выше): до неё их задают медиазапросы.
+   */
+  const carouselStyle = {
+    '--count': count,
+    ...(view ? { '--items': view.items, '--margin': `${view.margin}px` } : null)
+  } as CSSProperties;
 
   return (
     <div className={styles.carousel} style={carouselStyle}>
-      <div className={styles.navigation}>
-        <button
-          type="button"
-          aria-label="Предыдущие разделы"
-          className={`${styles.navButton} ${styles.prev}`}
-          onClick={() => goTo(current - 1)}
-        >
-          <ArrowIcon direction="left" />
-        </button>
-        <button
-          type="button"
-          aria-label="Следующие разделы"
-          className={`${styles.navButton} ${styles.next}`}
-          onClick={() => goTo(current + 1)}
-        >
-          <ArrowIcon direction="right" />
-        </button>
-      </div>
+      {view && !fits ? (
+        <div className={styles.navigation}>
+          <button
+            type="button"
+            aria-label="Предыдущие разделы"
+            className={`${styles.navButton} ${styles.prev}`}
+            onClick={() => goTo(current - 1)}
+          >
+            <ArrowIcon direction="left" />
+          </button>
+          <button
+            type="button"
+            aria-label="Следующие разделы"
+            className={`${styles.navButton} ${styles.next}`}
+            onClick={() => goTo(current + 1)}
+          >
+            <ArrowIcon direction="right" />
+          </button>
+        </div>
+      ) : null}
 
       <div
         ref={viewportRef}
@@ -271,25 +285,27 @@ export function CampusWindows({ items }: { items: Item[] }) {
         >
           {items.map((item, at) => (
             <div key={`${item.id}-${at}`} className={styles.slide}>
-              <Card item={item} shown={shown} delay={(at % unique) * AOS_STAGGER} />
+              <Card item={item} shown={shown} delay={at * AOS_STAGGER} />
             </div>
           ))}
         </div>
       </div>
 
-      <div className={styles.dots}>
-        {pages.map((item, at) => (
-          <button
-            key={item.start}
-            type="button"
-            aria-label={`Показать разделы ${item.start + 1}–${Math.min(item.end + 1, count)}`}
-            aria-current={at === page || undefined}
-            className={styles.dot}
-            data-active={at === page}
-            onClick={() => goTo(item.start)}
-          />
-        ))}
-      </div>
+      {view && !fits ? (
+        <div className={styles.dots}>
+          {pages.map((item, at) => (
+            <button
+              key={item.start}
+              type="button"
+              aria-label={`Показать разделы ${item.start + 1}–${Math.min(item.end + 1, count)}`}
+              aria-current={at === page || undefined}
+              className={styles.dot}
+              data-active={at === page}
+              onClick={() => goTo(item.start)}
+            />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -304,7 +320,7 @@ function Card({ item, shown, delay }: { item: Item; shown: boolean; delay: numbe
   const inner = (
     <>
       <div className={styles.itemImage}>
-        <Media image={item.photo} sizes="(max-width: 991px) 25vw, 16vw" />
+        <Media image={item.photo} sizes="(max-width: 574px) 50vw, (max-width: 767px) 33vw, 25vw" />
       </div>
       <h3 className={styles.itemTitle}>{item.title}</h3>
     </>

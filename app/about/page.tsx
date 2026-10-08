@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { site } from '@/site.config';
 import { about, why } from '@/data/content';
-import { aboutImage, aboutGallery } from '@/data/gallery';
+import { aboutImage, aboutGallery, flightGallery } from '@/data/gallery';
 import { resolveImage, resolveImages } from '@/lib/images';
 import { InnerHero } from '@/components/sections/PageHero';
 import { Container, Section } from '@/components/ui/Container';
@@ -11,6 +11,7 @@ import { ImageReveal } from '@/components/animations/ImageReveal';
 import { Gallery } from '@/components/sections/Gallery';
 import { Statistics } from '@/components/sections/Statistics';
 import { Advantages } from '@/components/sections/Advantages';
+import { PhotoGallery3D } from '@/components/sections/PhotoGallery3D';
 import { WhyGubkin } from '@/components/sections/WhyGubkin';
 import { AdmissionCTA } from '@/components/sections/AdmissionCTA';
 
@@ -30,6 +31,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   const portrait = resolveImage(aboutImage);
   const gallery = resolveImages(aboutGallery);
+  const flight = resolveImages(flightGallery);
 
   return (
     <>
@@ -70,6 +72,7 @@ export default function AboutPage() {
       <Statistics />
       <WhyGubkin />
       <Advantages />
+      <PhotoGallery3D images={flight} />
       <AdmissionCTA />
     </>
   );

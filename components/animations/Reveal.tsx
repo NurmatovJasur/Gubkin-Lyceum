@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, type ElementType, type ReactNode } from 'react';
+import type { PolymorphicTag } from '@/types';
 import { gsap, useIsomorphicLayoutEffect } from '@/lib/gsap';
 
 type RevealProps = {
@@ -28,7 +29,7 @@ type RevealProps = {
  */
 export function Reveal({
   children,
-  as: Tag = 'div',
+  as = 'div',
   className,
   delay = 0,
   stagger,
@@ -36,6 +37,7 @@ export function Reveal({
   y = 18
 }: RevealProps) {
   const root = useRef<HTMLDivElement>(null);
+  const Tag = as as PolymorphicTag<HTMLDivElement>;
 
   useIsomorphicLayoutEffect(() => {
     const element = root.current;

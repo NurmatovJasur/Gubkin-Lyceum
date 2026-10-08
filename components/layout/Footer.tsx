@@ -7,7 +7,7 @@ import { Container } from '@/components/ui/Container';
 /** Большой подвал сайта. */
 export function Footer({ logo }: { logo: string | null }) {
   return (
-    <footer className="mt-[clamp(48px,5.5vw,88px)] bg-black pt-[clamp(56px,7vw,100px)] pb-[clamp(28px,3vw,40px)] text-white">
+    <footer className="relative z-[2] mt-[clamp(48px,5.5vw,88px)] bg-black pt-[clamp(56px,7vw,100px)] pb-[clamp(28px,3vw,40px)] text-white">
       <Container>
         <div className="grid gap-9 border-b border-white/15 pb-[clamp(40px,5vw,76px)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)] lg:gap-[clamp(36px,5vw,90px)]">
           <div>

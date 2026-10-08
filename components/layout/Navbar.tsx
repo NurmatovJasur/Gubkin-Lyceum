@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Phone, X } from 'lucide-react';
+import { MapPin, Menu, Phone, X } from 'lucide-react';
 import { mainNav } from '@/data/navigation';
-import { site } from '@/site.config';
+import { site, mapLink } from '@/site.config';
 import { Brand } from '@/components/layout/Brand';
 import { NavDropdown } from '@/components/layout/NavDropdown';
 import { SocialLinks } from '@/components/ui/SocialLinks';
@@ -78,6 +78,19 @@ export function Navbar({ logo }: { logo: string | null }) {
    * не задев его. С 1440px места хватает на обычные 14px.
    */
   const navLink = 'text-[12.5px] 2xl:text-[14px]';
+
+  /*
+   * Круглые кнопки-иконки справа (карта, телефон). Вид тот же, что у
+   * иконок соцсетей, поэтому весь ряд читается как один блок. Класс
+   * display здесь не задаётся — у каждой кнопки свои точки показа.
+   */
+  const iconCircle = cn(
+    'size-9 shrink-0 items-center justify-center rounded-full border',
+    'transition-[background-color,border-color,color] duration-200 ease-brand',
+    solid
+      ? 'border-line text-black/70 hover:border-black hover:bg-black hover:text-white'
+      : 'border-white/30 text-white/85 hover:border-white hover:bg-white hover:text-black'
+  );
 
   /** В мобильной панели выпадающий список разворачивается в обычные строки. */
   const flatNav = mainNav.flatMap((item) => item.children ?? [item]);
@@ -157,6 +170,21 @@ export function Navbar({ logo }: { logo: string | null }) {
           <SocialLinks tone={tone} className="max-xl:hidden" />
 
           {/*
+            Адрес лицея на карте — отдельная иконка после соцсетей:
+            открывает Яндекс.Карты по тому же запросу, что секция контактов.
+          */}
+          <a
+            href={mapLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Лицей на карте: ${site.contacts.addressFull}`}
+            title={site.contacts.addressFull}
+            className={cn('hidden xl:flex', iconCircle)}
+          >
+            <MapPin aria-hidden="true" strokeWidth={1.7} className="size-[16px]" />
+          </a>
+
+          {/*
             До 1440px полный номер не помещается рядом с семью разделами —
             вместо него круглая иконка с тем же tel:-адресом, чтобы связь
             оставалась в один клик на любой ширине.
@@ -164,12 +192,7 @@ export function Navbar({ logo }: { logo: string | null }) {
           <a
             href={site.contacts.phoneHref}
             aria-label={`Позвонить: ${site.contacts.phone}`}
-            className={cn(
-              'hidden size-9 items-center justify-center rounded-full border transition-colors duration-200 ease-brand xl:flex 2xl:hidden',
-              solid
-                ? 'border-line text-black/70 hover:border-black hover:bg-black hover:text-white'
-                : 'border-white/30 text-white/85 hover:border-white hover:bg-white hover:text-black'
-            )}
+            className={cn('hidden xl:flex 2xl:hidden', iconCircle)}
           >
             <Phone aria-hidden="true" strokeWidth={1.7} className="size-[15px]" />
           </a>
@@ -237,7 +260,16 @@ export function Navbar({ logo }: { logo: string | null }) {
             <a href={site.contacts.phoneHref} className="text-xl font-bold tracking-[-0.01em]">
               {site.contacts.phone}
             </a>
-            <p className="text-sm text-muted">{site.contacts.addressFull}</p>
+            {/* Адрес в мобильной панели ведёт на ту же карту, что иконка в шапке. */}
+            <a
+              href={mapLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-start gap-2 text-sm text-muted"
+            >
+              <MapPin aria-hidden="true" strokeWidth={1.7} className="mt-px size-4 shrink-0" />
+              <span>{site.contacts.addressFull}</span>
+            </a>
           </div>
           <SocialLinks tone="dark" />
         </div>

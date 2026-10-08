@@ -1,0 +1,484 @@
+/*
+ * «Подписывайтесь на наши страницы в социальных сетях» — точная копия
+ * секции `footer > .footer-top` с newuu.uz/.
+ *
+ * Все числа взяты один в один из оригинальных стилей:
+ *   bootstrap.min.css  — reboot (`*, ::after, ::before { box-sizing: border-box }`,
+ *                        `h2`: font-weight 500; `img`: vertical-align middle), `.row`
+ *   main.css           — `*` (сброс margin/padding), `.container`, `.row`,
+ *                        `.row > div`, `.button`, `.button i`, `.button:hover`,
+ *                        `.footer-top`, `.footer-top .row`,
+ *                        `.footer-top .row > div:nth-child(1|2)`,
+ *                        `.footer-info`, `.footer-title`, `.footer-title span`,
+ *                        `.footer-text`, `.footer-top .footer-text`,
+ *                        `.footer-mockups`, `.footer-mockups::after`,
+ *                        `.footer-mockup`, `.footer-mockup img`,
+ *                        `.footer-mockup__social`, `.footer-mockup__social i`
+ *   icomoon/style.css  — `[class^="icon-"]` и коды глифов
+ *                        \e91a (icon-instagram-1), \e926 (icon-telegram-1)
+ *
+ * Оригинал опирается на глобальные `:root`-переменные, которые пересчитываются
+ * на брейкпоинтах 1712 / 1400 / 1199 / 991 / 768 / 574. Здесь те же переменные
+ * объявлены локально на самой секции, чтобы не трогать дизайн-систему сайта.
+ *
+ * Анимаций нет. `data-aos` на этой секции в оригинале отсутствует (проверено
+ * в DOM — `.footer-top [data-aos]` пуст), AOS её не трогает, появления при
+ * прокрутке нет. Наведение тоже ничего не меняет: глобальное
+ * `a:hover { color: var(--green-2) }` перебито у кнопки правилами
+ * `.button { color: var(--white-1) !important }` и `.button:hover`,
+ * а `transition` у `.button` не объявлен вовсе.
+ *
+ * Отличия от оригинала (по заданию):
+ *   • из пяти сетей оставлены две — Instagram и Telegram;
+ *   • тексты переведены на русский.
+ * Геометрия, тайминги и ассеты — те же; как сохранён размер телефонов
+ * при двух плитках вместо пяти, описано у `.colMockups`.
+ */
+
+/* ==========================================================================
+   :root оригинала, локально на секции
+   ========================================================================== */
+
+.section {
+  --font-500: 'MuseoSansCyrl-500', sans-serif;
+  --font-700: 'MuseoSansCyrl-700', sans-serif;
+
+  --green-2: rgba(65, 176, 120, 1);
+  --white-1: rgba(255, 255, 255, 1);
+  --c-white-1: 255, 255, 255;
+
+  --size-text-32: 32px;
+  --size-text-18: 18px;
+  --size-btn-48: 48px;
+
+  --space-60: 60px;
+  --space-32: 32px;
+  --space-16: 16px;
+
+  --width-container: 1680px;
+}
+
+@media only screen and (max-width: 1712px) {
+  .section {
+    --size-text-32: 26px;
+    --size-text-18: 16px;
+    --size-btn-48: 44px;
+
+    --width-container: 1368px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .section {
+    --size-btn-48: 40px;
+
+    --space-60: 48px;
+    --space-32: 24px;
+    --space-16: 14px;
+
+    --width-container: 1140px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .section {
+    --size-text-32: 26px;
+    --size-text-18: 16px;
+
+    --space-60: 40px;
+    --space-32: 20px;
+    --space-16: 12px;
+
+    --width-container: 100%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .section {
+    --size-text-32: 26px;
+    --size-text-18: 16px;
+
+    --space-60: 36px;
+    --space-32: 20px;
+    --space-16: 12px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .section {
+    --size-text-32: 24px;
+    --size-text-18: 16px;
+
+    --space-60: 32px;
+    --space-32: 20px;
+    --space-16: 12px;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .section {
+    --size-text-32: 20px;
+    --size-text-18: 16px;
+
+    --space-60: 24px;
+    --space-32: 20px;
+    --space-16: 12px;
+  }
+}
+
+/* ==========================================================================
+   .footer-top
+   --------------------------------------------------------------------------
+   `position: relative; z-index: 1` — то, за счёт чего телефоны вылезают на
+   60px вверх поверх предыдущей секции. Снизу их на те же 60px накрывает
+   следующий за секцией подвал: в оригинале это `.footer-bottom` с
+   `position: relative; z-index: 2`, здесь — `<footer>` с тем же приёмом
+   (см. components/layout/Footer.tsx).
+   ========================================================================== */
+
+.section {
+  background-image: url('/images/socials/footer-frame.jpg');
+  background-repeat: repeat;
+  background-size: auto;
+  position: relative;
+  z-index: 1;
+}
+
+@media only screen and (max-width: 768px) {
+  .section {
+    padding: var(--space-60) 0;
+  }
+}
+
+/* .container */
+.container {
+  max-width: calc(var(--width-container) + var(--space-16) * 2);
+  margin: 0 auto;
+  padding: 0 var(--space-16);
+  width: 100%;
+}
+
+/* ==========================================================================
+   .row / .row > div
+   ========================================================================== */
+
+/* `.row` (bootstrap + main.css) + `.footer-top .row` */
+.row {
+  --local-space: var(--space-16);
+
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 0;
+  margin-left: calc(0px - var(--local-space) / 2);
+  margin-right: calc(0px - var(--local-space) / 2);
+  row-gap: var(--local-space);
+  justify-content: space-between;
+}
+
+/* `.row > div` + `.footer-top .row > div` */
+.col {
+  flex: unset;
+  padding: 0 calc(var(--local-space) / 2);
+}
+
+/* .footer-top .row > div:nth-child(1) */
+.colInfo {
+  width: 25%;
+}
+
+/*
+ * .footer-top .row > div:nth-child(2) — в оригинале 70.8333%.
+ *
+ * Там колонку заполняют пять телефонов, здесь их два, а `.footer-mockup`
+ * тянется (`flex: 1 1 0%`) — на исходной ширине каждый телефон раздулся бы
+ * с 180px до 474px и утащил бы за собой высоту всей полосы (368px → 969px).
+ *
+ * Поэтому колонка сужена пропорционально числу плиток: 70.8333% × 2/5.
+ * Совпадение точное на любой ширине, потому что боковой padding колонки
+ * (`--local-space`, по половине с каждой стороны) равен зазору между
+ * телефонами (`gap: var(--space-16)`) — обе величины это одна переменная:
+ *
+ *   5 плиток: (0.708333·W − 16 − 4·16) / 5
+ *   2 плитки: (0.283333·W − 16 − 1·16) / 2   → одно и то же число.
+ *
+ * Проверено замером: при 1440px телефон остаётся 180.06px, полоса — 368.05px,
+ * высота секции — 248.05px, как в оригинале.
+ */
+.colMockups {
+  width: 28.3333%;
+}
+
+@media only screen and (max-width: 768px) {
+  .colInfo,
+  .colMockups {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   .footer-info / .footer-title / .footer-text
+   ========================================================================== */
+
+.info {
+  padding: var(--space-60) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* в оригинале здесь именно литерал 32px, а не var(--space-32) */
+@media only screen and (max-width: 1400px) {
+  .info {
+    padding: 32px 0;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .info {
+    padding: 0;
+  }
+}
+
+/* `.footer-title` + reboot `h2` + `* { margin: 0 }` из main.css */
+.title {
+  margin: 0;
+  font-weight: 500;
+  color: var(--white-1);
+  font-family: var(--font-700);
+  font-size: var(--size-text-32);
+  line-height: 140%;
+  letter-spacing: -0.32px;
+}
+
+@media only screen and (max-width: 768px) {
+  .title {
+    text-align: center;
+  }
+}
+
+/* .footer-title span */
+.title span {
+  color: var(--green-2);
+}
+
+/* `.footer-text` — `margin-top: auto` прижимает строку к низу колонки */
+.text {
+  margin: 0;
+  margin-top: auto;
+  color: rgba(var(--c-white-1), 0.6);
+  font-family: var(--font-500);
+  font-size: var(--size-text-18);
+  line-height: 140%;
+  letter-spacing: -0.18px;
+}
+
+/* .footer-top .footer-text */
+@media only screen and (max-width: 768px) {
+  .text {
+    text-align: center;
+  }
+}
+
+/* ==========================================================================
+   .footer-mockups
+   ========================================================================== */
+
+.mockups {
+  --local-margin-top: 60px;
+  --local-margin-bottom: 108px;
+
+  display: flex;
+  gap: var(--space-16);
+  margin-bottom: calc(0px - var(--local-margin-bottom));
+  margin-top: calc(0px - var(--local-margin-top));
+  position: relative;
+  z-index: 1;
+}
+
+/*
+ * Растушёвка низа телефонов в фон полосы. Сплошной конец градиента —
+ * #2a407a, тот же тон, что и у `footer-frame.jpg`.
+ */
+.mockups::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(42, 64, 122, 1) 0%, rgba(42, 64, 122, 0) 100%);
+  height: 104px;
+  bottom: var(--local-margin-bottom);
+}
+
+@media only screen and (max-width: 1712px) {
+  .mockups {
+    --local-margin-bottom: 60px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .mockups {
+    --local-margin-bottom: 32px;
+  }
+}
+
+/* ≤1199px: телефоны скрыты, остаются только кнопки */
+@media only screen and (max-width: 1199px) {
+  .mockups {
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 100%;
+    align-items: center;
+  }
+
+  .mockups::after {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .mockups {
+    flex-wrap: wrap;
+    align-items: center;
+    place-content: center;
+    gap: 12px 0;
+    margin: 0 -8px;
+  }
+}
+
+/* ==========================================================================
+   .footer-mockup
+   ========================================================================== */
+
+.mockup {
+  flex: 1 1 0%;
+  position: relative;
+  /*
+   * В оригинале курсор приходит от `<a href>` — кликабелен весь телефон,
+   * не только кнопка. Здесь у неподтверждённой сети ссылки нет (см. Socials.tsx),
+   * поэтому курсор задан явно: вид тот же, клик ничего не делает.
+   * Тот же приём, что у `.item` в Partners.module.css.
+   */
+  cursor: pointer;
+}
+
+.mockup img {
+  width: 100%;
+  /* reboot */
+  vertical-align: middle;
+}
+
+@media only screen and (max-width: 1199px) {
+  .mockup img {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .mockup {
+    flex: unset;
+    width: 33.3333%;
+    padding: 0 8px;
+  }
+}
+
+@media only screen and (max-width: 574px) {
+  .mockup {
+    width: 50%;
+  }
+}
+
+/* ==========================================================================
+   .footer-mockup__social — это `.button` оригинала
+   ========================================================================== */
+
+.social {
+  /* .button */
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  outline: none;
+  height: var(--size-btn-48);
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(62, 124, 181, 1) 0%, rgba(57, 165, 137, 1) 100%);
+  box-shadow:
+    0 2px 0 0 rgba(41, 103, 106, 1),
+    inset 0 8px 16px 0 rgba(255, 255, 255, 0.1),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.1);
+  padding: 0 14px;
+  font-family: var(--font-500);
+  font-size: var(--size-text-18);
+  line-height: 140%;
+  letter-spacing: -0.18px;
+  width: max-content;
+  justify-content: center;
+  color: var(--white-1);
+  text-decoration: none;
+
+  /* .footer-mockup__social */
+  position: absolute;
+  bottom: calc(var(--local-margin-bottom) + var(--space-32));
+  left: 50%;
+  transform: translate(-50%, 0%);
+  z-index: 99999;
+}
+
+/* .button */
+@media only screen and (max-width: 1400px) {
+  .social {
+    padding: 0 12px;
+  }
+}
+
+/* .footer-mockup__social */
+@media only screen and (max-width: 1199px) {
+  .social {
+    position: static;
+    transform: translate(0, 0%);
+    width: 100%;
+  }
+}
+
+/* .button */
+@media only screen and (max-width: 991px) {
+  .social {
+    padding: 0 10px;
+  }
+}
+
+/* `.button:hover` / `.button:hover i` — перебивают глобальное
+   `a:hover { color: var(--green-2) }`, то есть цвет не меняется */
+.social:hover,
+.social:hover .icon {
+  color: var(--white-1);
+}
+
+/* ==========================================================================
+   Иконочный шрифт icomoon
+   ========================================================================== */
+
+/* `[class^="icon-"]` + `.button i` + `.footer-mockup__social i` */
+.icon {
+  font-family: 'icomoon' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  font-size: 20px;
+  margin: 0;
+  color: var(--white-1);
+}
+
+/* .icon-instagram-1 */
+.iconInstagram::before {
+  content: '\e91a';
+}
+
+/* .icon-telegram-1 */
+.iconTelegram::before {
+  content: '\e926';
+}

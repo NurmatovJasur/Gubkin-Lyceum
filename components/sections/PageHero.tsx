@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import type { ResolvedImage } from '@/types';
 import { Media } from '@/components/ui/Media';
 import { Parallax } from '@/components/animations/Parallax';
@@ -59,10 +60,16 @@ export function PageHero({ image, title, intro, breadcrumb }: PageHeroProps) {
 /** Текстовый hero внутренних страниц — без фотографии. */
 export function InnerHero({
   title,
-  text
+  text,
+  eyebrow,
+  children
 }: {
   title: readonly string[] | string;
   text?: string;
+  /** Надзаголовок — раздел сайта. */
+  eyebrow?: string;
+  /** Дополнительный блок под текстом: цифры, ссылки, фильтры страницы. */
+  children?: ReactNode;
 }) {
   const lines = Array.isArray(title) ? title : [title as string];
 
@@ -70,6 +77,10 @@ export function InnerHero({
     <section className="border-b border-line pt-[calc(92px+clamp(40px,5vw,84px))] pb-[clamp(32px,4vw,56px)]">
       <div className="mx-auto w-full max-w-site px-gutter">
         <Reveal>
+          {eyebrow ? (
+            <span className="mb-5 block text-eyebrow text-subtle uppercase">{eyebrow}</span>
+          ) : null}
+
           <h1 className="mb-5 text-h1">
             {lines.map((line, index) => (
               <span key={line} className="block">
@@ -81,6 +92,8 @@ export function InnerHero({
 
           {text ? <p className="max-w-[46ch] text-lead text-muted">{text}</p> : null}
         </Reveal>
+
+        {children}
       </div>
     </section>
   );

@@ -109,6 +109,12 @@
   --image-width: 664px;
   --divider-width: 12px;
 
+  /*
+   * Высота карточки в оригинале — ровно 442px (снято с `.about-mid`), а не
+   * результат роста по контенту. Поэтому она задана явно; в колонку
+   * (<=991px) оригинал высоту не фиксирует, там она снова авто.
+   */
+  height: 442px;
   display: flex;
   flex-wrap: wrap;
   border: 1px solid var(--black-8);
@@ -132,6 +138,7 @@
 @media only screen and (max-width: 991px) {
   .card {
     --image-width: 100%;
+    height: auto;
     max-width: 600px;
     margin: 0 auto;
   }

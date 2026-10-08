@@ -32,9 +32,13 @@
   --size-btn-48: 48px;
   --space-20: 20px;
 
-  /* --- Owl: CCampus.items / CCampus.margin ------------------------------- */
+  /*
+   * Owl: CCampus.items / CCampus.margin. Разделов четыре, а не шесть, поэтому
+   * просвет на широких экранах уменьшен со 105px — со старым значением ряд
+   * расползался и арки теряли вертикальную пропорцию.
+   */
   --items: 6;
-  --margin: 105px;
+  --margin: 40px;
 
   padding: 60px 140px 72px;
   position: relative;
@@ -177,7 +181,7 @@
 }
 
 .text {
-  max-width: 300px;
+  max-width: 560px;
   color: #070c1c;
   text-align: center;
   font-size: var(--size-text-18);
@@ -204,8 +208,18 @@
 /* --- Карусель ------------------------------------------------------------ */
 
 .carousel {
+  /*
+   * Видимых карточек не больше, чем их есть: иначе при шести «местах» и
+   * четырёх разделах лента оставила бы справа две пустые позиции.
+   * `--count` приходит инлайном из CampusWindows.tsx.
+   */
+  --view: min(var(--items), var(--count, var(--items)));
+
   position: relative;
-  max-width: 1640px;
+  /* Четыре арки шириной ~200px: ряд собран по центру, а не растянут на 1640px. */
+  max-width: 920px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media only screen and (min-width: 1921px) {
@@ -237,7 +251,7 @@
 }
 
 .slide {
-  flex: 0 0 calc((100% + var(--margin)) / var(--items) - var(--margin));
+  flex: 0 0 calc((100% + var(--margin)) / var(--view) - var(--margin));
   margin-right: var(--margin);
   min-width: 0;
 }
@@ -257,14 +271,14 @@
 
 @media only screen and (max-width: 991px) {
   .section {
-    --items: 4;
+    --items: 2;
     --margin: 24px;
   }
 }
 
 @media only screen and (max-width: 767px) {
   .section {
-    --items: 3;
+    --items: 2;
     --margin: 16px;
   }
 }
@@ -329,6 +343,14 @@
     transform: none;
     transition: none;
   }
+
+  .itemImage,
+  .itemImage img,
+  a.item:hover .itemImage,
+  a.item:hover .itemImage img {
+    transform: none;
+    transition: none;
+  }
 }
 
 .itemImage {
@@ -338,6 +360,12 @@
   overflow: hidden;
   aspect-ratio: 0.7982;
   margin-bottom: 12px;
+  /* Арка приподнята над «землёй» секции — тень того же синего, что и рамка. */
+  box-shadow: 0 18px 38px -22px rgba(20, 87, 149, 0.45);
+  transition:
+    transform 0.5s var(--ease-out-brand),
+    border-color 0.4s ease,
+    box-shadow 0.5s var(--ease-out-brand);
 }
 
 .itemImage img {
@@ -345,6 +373,32 @@
   height: 100%;
   object-position: center;
   object-fit: cover;
+  transition: transform 0.7s var(--ease-out-brand);
+}
+
+/*
+ * Наведение — только у разделов со своей страницей: карточки без ссылки
+ * (`href: null` в data/campus.ts) не должны выглядеть нажимаемыми.
+ */
+a.item:hover .itemImage,
+a.item:focus-visible .itemImage {
+  transform: translateY(-6px);
+  border-color: #7ba7db;
+  box-shadow: 0 28px 52px -20px rgba(20, 87, 149, 0.55);
+}
+
+a.item:hover .itemImage img,
+a.item:focus-visible .itemImage img {
+  transform: scale(1.06);
+}
+
+a.item:focus-visible {
+  outline: none;
+}
+
+a.item:hover .itemTitle,
+a.item:focus-visible .itemTitle {
+  color: #145795;
 }
 
 .itemTitle {
@@ -355,6 +409,7 @@
   font-style: normal;
   line-height: 150%;
   letter-spacing: -0.4px;
+  transition: color 0.3s ease;
 }
 
 @media only screen and (max-width: 574px) {
